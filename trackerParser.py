@@ -4,6 +4,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
+import sys
 
 
 def chunk_list(lst, chunk_size):
@@ -16,7 +17,7 @@ def get_student_data(csv_file, student_name: str) -> list:
         df = pd.read_csv(csv_file)
     except FileNotFoundError:
         print("Error: File not found. Please ensure provided information is correct!")
-        return
+        exit()
 
     # Convert all student names to lowercase
     first_column_name = df.columns[1]
@@ -27,7 +28,7 @@ def get_student_data(csv_file, student_name: str) -> list:
 
     # Print the resulting row(s)
     if student_row.empty:
-        print("No student found with the name:", student_name)
+        sys.exit(f"No student found with the name: {student_name}")
     else:
         row_list = student_row.iloc[0].tolist()
         del row_list[:2]
