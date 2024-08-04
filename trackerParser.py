@@ -21,21 +21,16 @@ def generate_random_words(word_list, num_words):
     return ' '.join(random.choices(word_list, k=num_words))
 
 
-def create_text_box(c, x, y, width, height, word_list, num_words=100):
-    # Draw the box
-    c.setStrokeColor(colors.black)
-    c.setFillColor(colors.white)
-    c.rect(x, y - height, width, height, fill=1, stroke=1)
-
+def create_text_box(c, x, y, width, initial_height, word_list, num_words=100, line_width=1):
     # Generate random words
     random_words = generate_random_words(word_list, num_words)
 
     # Set up styles
     styles = getSampleStyleSheet()
 
-    # Title style
+    # Title style - smaller font size
     title_style = ParagraphStyle(
-        name='TitleStyle', fontName='Helvetica-Bold', fontSize=14, spaceAfter=10, alignment=1)
+        name='TitleStyle', fontName='Helvetica-Bold', fontSize=12, spaceAfter=5, alignment=0)  # Left align
 
     # Body text style
     body_style = ParagraphStyle(
@@ -47,22 +42,39 @@ def create_text_box(c, x, y, width, height, word_list, num_words=100):
     # Create body paragraph
     body_paragraph = Paragraph(random_words, body_style)
 
-    # Position for title and body text
-    title_x = x + 5
-    title_y = y - 10  # Starting Y position for the title
+    # Measure text sizes
+    title_width, title_height = title_paragraph.wrap(
+        width - 10, initial_height)
+    body_width, body_height = body_paragraph.wrap(
+        width - 10, initial_height - title_height - 15)
 
+    # Adjust the height of the box if necessary
+    adjusted_height = title_height + body_height + 30  # Adding some padding
+
+    # Clear previous drawings if necessary (e.g., by drawing a white rectangle over the old box)
+    c.setFillColor(colors.white)
+    c.rect(x, y - initial_height, width, initial_height, fill=1, stroke=0)
+
+    # Set line width
+    c.setLineWidth(line_width)
+
+    # Draw the updated box with the adjusted height
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(0.5)
+    c.setFillColor(colors.white)
+    c.rect(x, y - adjusted_height, width, adjusted_height, fill=1, stroke=1)
+
+    # Reposition and draw the title - Aligned to the top-left corner
+    title_x = x + 5  # Padding from the left
+    title_y = y - 10  # Padding from the top
+    title_paragraph.wrapOn(c, width - 10, adjusted_height)
+    title_paragraph.drawOn(c, title_x, title_y - title_paragraph.height)
+
+    # Reposition and draw the body text
     body_x = x + 5
-    body_y = y - 30  # Position below the title, adjust as needed
-
-    # Draw the title inside the box
-    title_paragraph.wrapOn(c, width - 10, height)
-    title_paragraph.drawOn(c, title_x + (width - title_paragraph.width) / 2,
-                           title_y - title_paragraph.height)  # Center the title
-
-    # Draw the body text inside the box
-    # Adjust height for the title
-    body_paragraph.wrapOn(c, width - 10, height - title_paragraph.height - 20)
-    # Position body text
+    body_y = title_y - title_paragraph.height - 10  # Position below the title
+    body_paragraph.wrapOn(c, width - 10, adjusted_height -
+                          title_paragraph.height - 20)
     body_paragraph.drawOn(c, body_x, body_y - body_paragraph.height)
 
 
