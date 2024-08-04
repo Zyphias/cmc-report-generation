@@ -1,17 +1,72 @@
+import random
 import pandas as pd
 from tabulate import tabulate
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import Paragraph
+
+
 from reportlab.lib import colors
 import sys
+from reportlab.pdfgen import canvas
 
 
 def chunk_list(lst, chunk_size):
     return [lst[i:i + chunk_size] for i in range(0, len(lst), chunk_size)]
 
 
-def get_student_data(csv_file, student_name: str) -> list:
+def generate_random_words(word_list, num_words):
+    return ' '.join(random.choices(word_list, k=num_words))
+
+
+def create_text_box(c, x, y, width, height, word_list, num_words=100):
+    # Draw the box
+    c.setStrokeColor(colors.black)
+    c.setFillColor(colors.white)
+    c.rect(x, y - height, width, height, fill=1, stroke=1)
+
+    # Generate random words
+    random_words = generate_random_words(word_list, num_words)
+
+    # Set up styles
+    styles = getSampleStyleSheet()
+
+    # Title style
+    title_style = ParagraphStyle(
+        name='TitleStyle', fontName='Helvetica-Bold', fontSize=14, spaceAfter=10, alignment=1)
+
+    # Body text style
+    body_style = ParagraphStyle(
+        name='BodyStyle', fontName='Helvetica', fontSize=10, leading=12, alignment=0)  # Left align
+
+    # Create title paragraph
+    title_paragraph = Paragraph("Tutor Comments", title_style)
+
+    # Create body paragraph
+    body_paragraph = Paragraph(random_words, body_style)
+
+    # Position for title and body text
+    title_x = x + 5
+    title_y = y - 10  # Starting Y position for the title
+
+    body_x = x + 5
+    body_y = y - 30  # Position below the title, adjust as needed
+
+    # Draw the title inside the box
+    title_paragraph.wrapOn(c, width - 10, height)
+    title_paragraph.drawOn(c, title_x + (width - title_paragraph.width) / 2,
+                           title_y - title_paragraph.height)  # Center the title
+
+    # Draw the body text inside the box
+    # Adjust height for the title
+    body_paragraph.wrapOn(c, width - 10, height - title_paragraph.height - 20)
+    # Position body text
+    body_paragraph.drawOn(c, body_x, body_y - body_paragraph.height)
+
+
+def get_student_data(csv_file='24t3y9.csv', student_name: str = 'jessica powell') -> list:
     # Read the CSV file into a DataFrame
     try:
         df = pd.read_csv(csv_file)
@@ -56,34 +111,35 @@ def get_student_data(csv_file, student_name: str) -> list:
 
 
 def init_program():
-    print("Welcome to the Student Database!")
-    student_name = input("Enter the student's name: ").lower()
-    year = input("Enter the students year (e.g. 9): ")
-    period = input("Enter the period (YYTT e.g. 24t3): ").lower()
-    data = get_student_data(period + 'y' + year + ".csv", student_name)
+    # print("Welcome to the Student Database!")
+    # student_name = input("Enter the student's name: ").lower()
+    # year = input("Enter the students year (e.g. 9): ")
+    # period = input("Enter the period (YYTT e.g. 24t3): ").lower()
+    # data = get_student_data(period + 'y' + year + ".csv", student_name)
+    data = get_student_data()
 
-    # data = [
-    #     ['Week', 'Understanding', 'Procedures', 'Problem Solving', 'Homework'],
-    #     ['Week 1', None, None, None],
-    #     ['Week 2', 'B', 'A', 'B', 'B'],
-    #     ['Week 3', None, None, None],
-    #     [None, None, None, None],
-    #     [None, None, None, None],
-    #     [None, None, None, None],
-    #     [None, None, None, None],
-    #     [None, None, None, None],
-    #     [None, None, None, None],
-    #     [None, None, None, None]
-    # ]
     generate_pdf('test.pdf', data)
 
 
 def generate_pdf(file_name, data):
-    pdf = SimpleDocTemplate(file_name, pagesize=letter, rightMargin=inch,
-                            leftMargin=inch, topMargin=inch, bottomMargin=inch)
+    # Create a canvas object
+    c = canvas.Canvas(file_name, pagesize=letter)
+    width, height = letter
+
+    # Define margins
+    left_margin = inch
+    right_margin = inch
+    top_margin = inch
+    bottom_margin = inch
 
     # Adjust column widths
     column_widths = [1.2 * inch] * len(data[0])
+
+    # Calculate table position
+    table_width = sum(column_widths)
+    table_height = len(data) * 0.5 * inch  # Estimate row height
+    table_x = (width - table_width) / 2  # Center horizontally
+    table_y = top_margin + table_height
 
     # Create a Table with adjusted column widths
     table = Table(data, colWidths=column_widths)
@@ -103,8 +159,26 @@ def generate_pdf(file_name, data):
     # Apply styles to the Table
     table.setStyle(style)
 
-    # Build the PDF
-    pdf.build([table])
+    # Build the table into the canvas
+    table.wrapOn(c, width - left_margin - right_margin, table_height)
+    table.drawOn(c, table_x, table_y)  # Position the table on the canvas
+
+    # Define the position and size of the text box
+    box_width = 400
+    box_height = 200
+    box_x = (width - box_width) / 2  # Center horizontally
+    box_y = height - top_margin - box_height - \
+        1.5 * inch  # Adjust for margin and space
+
+    # Generate a list of words (can be customized)
+    word_list = ["lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore", "magna", "aliqua", "enim", "ad", "minim", "veniam", "quis", "nostrud",
+                 "exercitation", "ullamco", "laboris", "nisi", "ut", "aliquip", "ex", "ea", "commodo", "consequat", "duis", "aute", "irure", "dolor", "in", "reprehenderit", "in", "voluptate", "velit", "esse", "cillum", "dolore", "eu", "fugiat", "nulla", "pariatur"]
+
+    # Call the function to create the text box
+    create_text_box(c, box_x, box_y, box_width, box_height, word_list)
+
+    # Save the PDF
+    c.save()
 
 
 if __name__ == '__main__':
