@@ -6,7 +6,7 @@ from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import Paragraph
-
+from PIL import Image
 
 from reportlab.lib import colors
 import sys
@@ -137,6 +137,22 @@ def generate_pdf(file_name, data):
     # Create a canvas object
     c = canvas.Canvas(file_name, pagesize=letter)
     width, height = letter
+
+    # Draw the logo at the top left corner
+    with Image.open('logo.png') as img:
+        original_width, original_height = img.size
+
+    # Desired width for the logo
+    desired_width = 1.5 * inch
+    # Calculate the aspect ratio
+    aspect_ratio = original_width / original_height
+
+    # Calculate the height to maintain the aspect ratio
+    desired_height = desired_width / aspect_ratio
+
+# Draw the logo at the top left corner
+    c.drawImage('logo.png', 0.5 * inch, height - desired_height - 0.5 *
+                inch, width=desired_width, height=desired_height, mask='auto')
 
     # Define margins
     left_margin = inch
