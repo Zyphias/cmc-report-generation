@@ -43,6 +43,10 @@ def get_student_data(csv_file, student_name: str) -> list:
 
         grouped_list = chunk_list(row_list, 4)
 
+        # add increase numbers to each chunk
+        for i in range(len(grouped_list)):
+            grouped_list[i].insert(0, i+1)
+
         print("Row as a list:", grouped_list)
         print("Comments:", comments)
         # Append column titles
