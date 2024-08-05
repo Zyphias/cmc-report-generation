@@ -127,9 +127,9 @@ def generate_pdf(file_name, data):
     # Apply styles to the Table
     table.setStyle(style)
 
-    # Build the table into the canvas
-    table.wrapOn(c, width - left_margin - right_margin, table_height)
-    table.drawOn(c, table_x, table_y)  # Position the table on the canvas
+    # # Build the table into the canvas
+    # table.wrapOn(c, width - left_margin - right_margin, table_height)
+    # table.drawOn(c, table_x, table_y)  # Position the table on the canvas
 
     # Define the position and size of the text box
     box_width = 400

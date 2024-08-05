@@ -7,7 +7,7 @@ def chunk_list(lst, chunk_size):
     return [lst[i:i + chunk_size] for i in range(0, len(lst), chunk_size)]
 
 
-def get_student_data(csv_file='24t3y9.csv', student_name: str = 'jessica powell') -> list:
+def get_student_data(csv_file='./csv_store/24t3y9.csv', student_name: str = 'jessica powell') -> list:
     # Read the CSV file into a DataFrame
     try:
         df = pd.read_csv(csv_file)
@@ -60,7 +60,3 @@ def init_program():
     data = get_student_data()
 
     generate_pdf('test.pdf', data)
-
-
-if __name__ == '__main__':
-    init_program()
