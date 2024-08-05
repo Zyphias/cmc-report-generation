@@ -30,11 +30,11 @@ def create_text_box(c, x, y, width, initial_height, word_list, num_words=100, li
 
     # Title style - smaller font size
     title_style = ParagraphStyle(
-        name='TitleStyle', fontName='Helvetica-Bold', fontSize=12, spaceAfter=5, alignment=0)  # Left align
+        name='TitleStyle', fontName='Helvetica-Bold', fontSize=14, spaceAfter=5, alignment=0)  # Left align
 
     # Body text style
     body_style = ParagraphStyle(
-        name='BodyStyle', fontName='Helvetica', fontSize=10, leading=12, alignment=0)  # Left align
+        name='BodyStyle', fontName='Helvetica', fontSize=12, leading=12, alignment=0)  # Left align
 
     # Create title paragraph
     title_paragraph = Paragraph("Tutor Comments", title_style)
@@ -139,20 +139,23 @@ def generate_pdf(file_name, data):
     width, height = letter
 
     # Draw the logo at the top left corner
-    with Image.open('logo.png') as img:
+    with Image.open('LetterHead.png') as img:
         original_width, original_height = img.size
 
     # Desired width for the logo
-    desired_width = 1.5 * inch
+    desired_width = 8 * inch
     # Calculate the aspect ratio
     aspect_ratio = original_width / original_height
 
     # Calculate the height to maintain the aspect ratio
     desired_height = desired_width / aspect_ratio
 
+    x = (width - desired_width) / 2
+    y = (height - desired_height) / 2
+
 # Draw the logo at the top left corner
-    c.drawImage('logo.png', 0.5 * inch, height - desired_height - 0.5 *
-                inch, width=desired_width, height=desired_height, mask='auto')
+    c.drawImage('LetterHead.png', x=x, y=y, width=desired_width,
+                height=desired_height, mask='auto')
 
     # Define margins
     left_margin = inch
@@ -167,7 +170,7 @@ def generate_pdf(file_name, data):
     table_width = sum(column_widths)
     table_height = len(data) * 0.5 * inch  # Estimate row height
     table_x = (width - table_width) / 2  # Center horizontally
-    table_y = top_margin + table_height
+    table_y = top_margin + table_height - 1.5 * inch  # Adjust for margin and space
 
     # Create a Table with adjusted column widths
     table = Table(data, colWidths=column_widths)
@@ -179,7 +182,7 @@ def generate_pdf(file_name, data):
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#d3f7c6')),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
         ('WORDWRAP', (0, 0), (-1, -1), True),
     ])
@@ -196,7 +199,7 @@ def generate_pdf(file_name, data):
     box_height = 200
     box_x = (width - box_width) / 2  # Center horizontally
     box_y = height - top_margin - box_height - \
-        1.5 * inch  # Adjust for margin and space
+        1.5 * inch - 1.5 * inch  # Adjust for margin and space
 
     # Generate a list of words (can be customized)
     word_list = ["lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore", "magna", "aliqua", "enim", "ad", "minim", "veniam", "quis", "nostrud",
