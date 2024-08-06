@@ -1,6 +1,6 @@
 import pandas as pd
 import sys
-from generatePdf import generate_pdf
+from legacy_code.generatePdf import generate_pdf
 
 
 def chunk_list(lst, chunk_size):
