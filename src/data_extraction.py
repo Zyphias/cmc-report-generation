@@ -80,14 +80,14 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
                 students.append(student)
                 j += 1
 
-            # Find the topics in the class
-            while j < len(df) and df.iloc[j, 1] == 'Topic':
-                topic = df.iloc[j, 0]
-                topics.append(topic)
-                j += 1
+            # Find the topics in the class, they are found to the right of the 'topic' keyword
+            k = 2
+            while k < len(df.columns) and df.iloc[i, k] != 'Topic':
+                topics.append(df.iloc[i, k])
+                k += 5
 
             # Create a new Class object and add it to the Year object
-            year.add_class(tutor, students, topics, '')
+            year.add_class(tutor, students, topics, level)
             print(
                 f"Class {tutor} created with {len(students)} students and {len(topics)} topics. Level: {level}.")
             i = j
