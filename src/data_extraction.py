@@ -41,13 +41,12 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
     total_classes = 0
     for i, row in df.iterrows():
         if row.iloc[1] == 'Topic':
-            print(f"Found class in row {i}.")
             total_classes += 1
 
-    # Break the CSV file into classes
     print(f"Found {total_classes} classes.")
-    print('\n')
+    print()
 
+    # Break the CSV file into classes
     for i, row in df.iterrows():
         if row.iloc[1] == 'Topic':
             tutor = ''
