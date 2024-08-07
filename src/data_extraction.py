@@ -1,8 +1,20 @@
 import sys
 import pandas as pd
+from data_types import PathType
 from objects.student import Student
 from objects.student_data import StudentData
 from objects.year import Year
+
+
+def set_class_level(level: str) -> str:
+    if level == ('5.3'):
+        return PathType.PATH_TO_ADVANCED
+    elif level == ('5.2'):
+        return PathType.PATH_TO_STANDARD
+    elif level == ('advanced'):
+        return PathType.ADVANCED
+    elif level == ('standard'):
+        return PathType.STANDARD
 
 
 def parse_student_data(data: str) -> StudentData:
@@ -66,7 +78,8 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
                 # Set tutor and level if not already set
                 if tutor == '':
                     tutor = df.iloc[j, 0]
-                    level = df.iloc[j+1, 0]
+                    level = set_class_level(df.iloc[j+1, 0])
+                    print(f"Level set to {level}.")
 
                 # Create and append student to the list
                 student_name = student.strip().lower()
@@ -94,6 +107,6 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
             print('\n')
 
     print(
-        f"Found {total_classes} classes.")
+        f"Created {total_classes} classes.")
 
     return year
