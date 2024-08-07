@@ -1,7 +1,6 @@
-from src.classes.Year import Year
 from src.data_extraction import csv_to_object
 from legacy_code.generatePdf import generate_pdf
-from legacy_code.trackerParser import get_student_data, init_program
+from legacy_code.trackerParser import get_student_data
 
 
 def init_program():
