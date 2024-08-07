@@ -51,7 +51,9 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
 
                 if tutor == '':
                     tutor = df.iloc[j, 0]
+                    level = df.iloc[j+1, 0]
 
+                student = student.strip()
                 print(f"Found student {student}.")
                 students.append(student)
                 j += 1
@@ -65,7 +67,7 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
             # Create a new Class object and add it to the Year object
             year.add_class(tutor, students, topics, '')
             print(
-                f"Class {tutor} created with {len(students)} students and {len(topics)} topics.")
+                f"Class {tutor} created with {len(students)} students and {len(topics)} topics. Level: {level}.")
             i = j
             print('\n')
 
