@@ -22,3 +22,9 @@ class Class:
 
     def get_topics(self) -> list[str]:
         return self.topics
+
+    def get_student(self, student_name: str) -> Student:
+        for student in self.students:
+            if student.get_name() == student_name:
+                return student
+        return None

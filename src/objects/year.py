@@ -1,3 +1,4 @@
+from objects.student import Student
 from .group import Class
 
 
@@ -27,6 +28,19 @@ class Year:
 
     def get_period(self) -> str:
         return self.period
+
+    def get_student(self, student_name: str) -> Student | None:
+        for class_ in self.classes:
+            student = class_.get_student(student_name)
+            if student is not None:
+                return student
+        return None
+
+    def get_students(self) -> list[Student]:
+        students = []
+        for class_ in self.classes:
+            students.extend(class_.get_students())
+        return students
 
 
 """

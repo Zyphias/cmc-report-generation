@@ -1,6 +1,24 @@
 import sys
 import pandas as pd
+from objects.student import Student
+from objects.student_data import StudentData
 from objects.year import Year
+
+
+def parse_student_data(data: str) -> StudentData:
+    """Parse the data from a student row in the CSV file and return a StudentData object."""
+    feedback = []
+    comments = []
+
+    # Comments are every 5th element. Add to comments
+    for i in range(4, len(data), 5):
+        comments.append(data[i])
+
+    # Remove comments from data, the rest is feedback
+    data = [data[i] for i in range(len(data)) if i % 5 != 4]
+    feedback = data
+
+    return StudentData(feedback, comments)
 
 
 def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
@@ -32,29 +50,34 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
 
     for i, row in df.iterrows():
         if row.iloc[1] == 'Topic':
-
-            # Tutor is found to the left of the first student.
-
             tutor = ''
             students = []
             topics = []
             level = ''
 
             # Find the students in the class
-            # If student is NaN or not two words, skip
             j = i + 1
             while j < len(df) and df.iloc[j, 1] != 'Topic':
                 student = df.iloc[j, 1]
+                # If student is NaN or not <first name> <last name>, skip
                 if pd.isna(student) or len(student.split()) != 2:
                     j += 1
                     continue
 
+                # Set tutor and level if not already set
                 if tutor == '':
                     tutor = df.iloc[j, 0]
                     level = df.iloc[j+1, 0]
 
-                student = student.strip()
-                print(f"Found student {student}.")
+                # Create and append student to the list
+                student_name = student.strip().lower()
+                print(f"Found student {student_name}.")
+
+                # Grab all data from that row
+                student_data = df.iloc[j, 2:].to_list()
+                student = Student(
+                    student_name, parse_student_data(student_data))
+
                 students.append(student)
                 j += 1
 

@@ -10,8 +10,8 @@ class Student:
         self.name = name
         self.data = data
 
-    def get_student_data(self) -> StudentData:
+    def get_data(self) -> StudentData:
         return self.data
 
-    def get_student_name(self) -> str:
+    def get_name(self) -> str:
         return self.name
