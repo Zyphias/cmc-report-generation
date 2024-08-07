@@ -14,7 +14,7 @@ class Year:
     def __init__(self, year: str, period: str):
         self.year = year
         self.period = period
-        self.classes = list[Class]
+        self.classes = []
 
     def add_class(self, tutor, students, topics):
         self.classes.append(Class(tutor, students, topics))
