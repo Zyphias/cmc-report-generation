@@ -30,6 +30,9 @@ def parse_student_data(data: str) -> StudentData:
     data = [data[i] for i in range(len(data)) if i % 5 != 4]
     feedback = data
 
+    # for each item in feedback, keep first character
+    feedback = [s[0] if isinstance(s, str) else s for s in feedback]
+
     return StudentData(feedback, comments)
 
 

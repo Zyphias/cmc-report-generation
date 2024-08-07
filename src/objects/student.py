@@ -15,3 +15,7 @@ class Student:
 
     def get_name(self) -> str:
         return self.name
+
+    def pretty_print(self):
+        print(f"Name: {self.name}")
+        print(self.data.pretty_print())

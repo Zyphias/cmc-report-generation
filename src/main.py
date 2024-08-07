@@ -8,14 +8,22 @@ def main():
     year = csv_to_object(csv_file)
 
     # Test student methods
-    student = year.get_student("grace mcmartin")
-    if student is None:
-        print("Student not found.")
-    else:
-        print(student.get_data().get_feedback())
-        print(student.get_data().get_comments())
 
-    print("Program finished. Success!")
+    try:
+        while True:
+            student_name = input("Enter a student name: ").strip()
+            if student_name == "":
+                break
+            student = year.get_student(student_name)
+            if student is None:
+                print("Student not found.")
+            else:
+                student.pretty_print()
+    except KeyboardInterrupt:
+        print()
+        print("Keyboard interrupt received, shutting down...")
+    finally:
+        print("Goodbye!")
 
 
 if __name__ == '__main__':
