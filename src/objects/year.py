@@ -16,8 +16,8 @@ class Year:
         self.period = period
         self.classes = []
 
-    def add_class(self, tutor, students, topics):
-        self.classes.append(Class(tutor, students, topics))
+    def add_class(self, tutor, students, topics, level):
+        self.classes.append(Class(tutor, students, topics, level))
 
     def get_classes(self) -> list[Class]:
         return self.classes

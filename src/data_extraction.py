@@ -28,16 +28,30 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
 
     # Break the CSV file into classes
     print(f"Found {total_classes} classes.")
+    print('\n')
+
     for i, row in df.iterrows():
         if row.iloc[1] == 'Topic':
-            tutor = row.iloc[0]
+
+            # Tutor is found to the left of the first student.
+
+            tutor = ''
             students = []
             topics = []
+            level = ''
 
             # Find the students in the class
+            # If student is NaN or not two words, skip
             j = i + 1
             while j < len(df) and df.iloc[j, 1] != 'Topic':
                 student = df.iloc[j, 1]
+                if pd.isna(student) or len(student.split()) != 2:
+                    j += 1
+                    continue
+
+                if tutor == '':
+                    tutor = df.iloc[j, 0]
+
                 print(f"Found student {student}.")
                 students.append(student)
                 j += 1
@@ -49,10 +63,11 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
                 j += 1
 
             # Create a new Class object and add it to the Year object
-            year.add_class(tutor, students, topics)
+            year.add_class(tutor, students, topics, '')
             print(
                 f"Class {tutor} created with {len(students)} students and {len(topics)} topics.")
             i = j
+            print('\n')
 
     print(
         f"Found {total_classes} classes.")

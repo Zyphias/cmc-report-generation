@@ -8,10 +8,11 @@ class Class:
         - topics: list of strings
     """
 
-    def __init__(self, tutor: str, students: list[Student], topics: list[str]):
+    def __init__(self, tutor: str, students: list[Student], topics: list[str], level: str):
         self.tutor = tutor
         self.students = students
         self.topics = topics
+        self.level = level
 
     def get_tutor(self) -> str:
         return self.tutor
