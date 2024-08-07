@@ -1,4 +1,4 @@
-from src.objects.student_data import StudentData
+from .student_data import StudentData
 
 
 class Student:

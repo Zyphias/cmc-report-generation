@@ -1,6 +1,6 @@
 import sys
 import pandas as pd
-from src.classes.Year import Year
+from objects.year import Year
 
 
 def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
@@ -11,6 +11,6 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
         df = pd.read_csv(csv_file)
     except FileNotFoundError:
         sys.exit(
-            "Error: File not found. Please ensure provided information is correct!")
+            f"Error: File {csv_file} not found. Please ensure the file exists and try again.")
 
     return Year('10', '24t3')

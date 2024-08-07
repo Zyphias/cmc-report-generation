@@ -1,4 +1,4 @@
-from src.objects.group import Class
+from .group import Class
 
 
 class Year:
