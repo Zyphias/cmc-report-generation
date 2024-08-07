@@ -18,8 +18,3 @@ class PathType(Enum):
             return "Standard"
         else:
             return super().__str__()
-
-
-# Example usage:
-print(PathType.PATH_TO_STANDARD)  # Output: Path to Standard
-print(PathType.PATH_TO_ADVANCED)  # Output: Path to Advanced

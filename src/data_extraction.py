@@ -68,6 +68,7 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
 
             # Find the students in the class
             j = i + 1
+            print("Class found: ")
             while j < len(df) and df.iloc[j, 1] != 'Topic':
                 student = df.iloc[j, 1]
                 # If student is NaN or not <first name> <last name>, skip
@@ -78,12 +79,14 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
                 # Set tutor and level if not already set
                 if tutor == '':
                     tutor = df.iloc[j, 0]
+                    print(f"Tutor: {tutor}.")
                     level = set_class_level(df.iloc[j+1, 0])
-                    print(f"Level set to {level}.")
+                    print(f"Level: {level}.")
+                    print("Students: ")
 
                 # Create and append student to the list
                 student_name = student.strip().lower()
-                print(f"Found student {student_name}.")
+                print(f"- {student_name}.")
 
                 # Grab all data from that row
                 student_data = df.iloc[j, 2:].to_list()
@@ -102,7 +105,7 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
             # Create a new Class object and add it to the Year object
             year.add_class(tutor, students, topics, level)
             print(
-                f"Class {tutor} created with {len(students)} students and {len(topics)} topics. Level: {level}.")
+                f"{len(topics)} topics.")
             i = j
             print('\n')
 
