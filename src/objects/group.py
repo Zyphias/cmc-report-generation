@@ -10,7 +10,7 @@ class Class:
         - level: string
     """
 
-    def __init__(self, tutor: str, students: list[Student], topics: list[str], level: str):
+    def __init__(self, tutor: str, students: list[Student], topics: list[str], level: str | None):
         self.tutor = tutor
         self.students = students
         self.topics = topics

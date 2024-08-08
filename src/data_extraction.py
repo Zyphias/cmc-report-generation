@@ -6,7 +6,7 @@ from objects.student_data import StudentData
 from objects.year import Year
 
 
-def set_class_level(level: str) -> str:
+def set_class_level(level: str) -> str | None:
     if level == ('5.3'):
         return PathType.PATH_TO_ADVANCED
     elif level == ('5.2'):
@@ -15,6 +15,8 @@ def set_class_level(level: str) -> str:
         return PathType.ADVANCED
     elif level == ('standard'):
         return PathType.STANDARD
+    else:
+        return None
 
 
 def parse_student_data(data: str) -> StudentData:
