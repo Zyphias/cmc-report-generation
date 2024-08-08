@@ -1,3 +1,4 @@
+from pdf_generation import generate_pdf
 from .student import Student
 
 
@@ -6,6 +7,7 @@ class Class:
         - tutor: string
         - students: list of Students
         - topics: list of strings
+        - level: string
     """
 
     def __init__(self, tutor: str, students: list[Student], topics: list[str], level: str):
@@ -28,3 +30,7 @@ class Class:
             if student.get_name() == student_name:
                 return student
         return None
+
+    def generate_pdfs(self):
+        for student in self.students:
+            generate_pdf(self.tutor, self.level, self.topics, student)

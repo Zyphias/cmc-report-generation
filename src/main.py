@@ -2,13 +2,12 @@ from data_extraction import csv_to_object
 
 
 def main():
-    csv_file = 'src/csv_store/24t3y9.csv'
+    csv_file = 'src/csv_store/24t3y8.csv'
 
     # Read a CSV file and generate a new Year object
     year = csv_to_object(csv_file)
 
-    # Test student methods
-
+    # Main loop - get student info
     try:
         while True:
             student_name = input("Enter a student name: ").strip()

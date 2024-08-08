@@ -9,6 +9,7 @@ class Student:
     def __init__(self, name: str, data: StudentData):
         self.name = name
         self.data = data
+        self.averages = data.get_averages()
 
     def get_data(self) -> StudentData:
         return self.data
