@@ -1,4 +1,5 @@
 from data_extraction import csv_to_object
+from pdf_generation import generate_pdf
 
 
 def main():
@@ -10,7 +11,7 @@ def main():
     # Main loop - get student info
     try:
         while True:
-            student_name = input("Enter a student name: ").strip()
+            student_name = input("Enter a student name: ").strip().title()
             if student_name == "":
                 break
             student = year.get_student(student_name)
@@ -18,6 +19,8 @@ def main():
                 print("Student not found.")
             else:
                 student.pretty_print()
+                generate_pdf("Steve", "Path to Standard", [
+                    "Topic 1", "Topic 2"], student)
     except KeyboardInterrupt:
         print()
         print("Keyboard interrupt received, shutting down...")

@@ -90,7 +90,7 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
                     print("Students: ")
 
                 # Create and append student to the list
-                student_name = student.strip().lower()
+                student_name = student.strip()
                 print(f"- {student_name}.")
 
                 # Grab all data from that row
