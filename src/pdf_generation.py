@@ -10,6 +10,8 @@ LETTER_HEAD_PATH = 'src/images/LetterHead.png'
 MAX_WIDTH = 408.072
 TEXT_SIZE = 12
 FONT = "Helvetica"
+TITLE_FONT = "Helvetica-Bold"
+TITLE_FONT_SIZE = 14
 
 
 def draw_letterhead(c: canvas.Canvas, page_width: float, page_height: float):
@@ -175,23 +177,17 @@ def draw_summary_level(c, page_width, page_height, pairs, max_width=MAX_WIDTH):
     return page_height - box_height
 
 
-def draw_summary(c: canvas.Canvas, page_width: float, page_height: float, stu_name: str, stu_avg: list[str], stu_level: str):
+def draw_summary(c: canvas.Canvas, page_width: float, page_height: float, stu_name: str, stu_avg: list[str], stu_level: str) -> float:
+    c.setFont(TITLE_FONT, TITLE_FONT_SIZE)
     c.drawString(100, page_height, "Summary of Results")
+    c.setFont(FONT, TEXT_SIZE)
 
     summary = [['Understanding', stu_avg[0]], ['Fluency',
                stu_avg[1]], ['Problem Solving', stu_avg[2]]]
     page_height = draw_name_level(
         c, page_width, page_height - 50, stu_name, stu_level)
-    draw_summary_level(c, page_width, page_height, summary)
-
-    # Break apart understanding, fluency and problem solving
-    understanding = stu_avg[0]
-    fluency = stu_avg[1]
-    problem_solving = stu_avg[2]
-
-    c.drawString(100, page_height - 200, f"Understanding: {understanding}")
-    c.drawString(100, page_height - 250, f"Fluency: {fluency}")
-    c.drawString(100, page_height - 300, f"Problem Solving: {problem_solving}")
+    page_height = draw_summary_level(c, page_width, page_height, summary)
+    return page_height
 
 
 def generate_pdf(tutor: str, level: str, topics: list[str], student: Student):
