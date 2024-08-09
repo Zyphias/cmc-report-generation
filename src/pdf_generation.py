@@ -3,6 +3,8 @@ from objects.student import Student
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import A4
+from reportlab.lib.colors import black, white
+
 
 LETTER_HEAD_PATH = 'src/images/LetterHead.png'
 
@@ -27,6 +29,146 @@ def draw_letterhead(c: canvas.Canvas, page_width: float, page_height: float):
     c.drawImage(LETTER_HEAD_PATH, x=x, y=y, width=desired_width,
                 height=desired_height, mask='auto')
 
+    # Return the new 'page height' after the logo has been drawn
+    return desired_height - 160
+
+
+def draw_text_box(c, x, y, width, height, text):
+    # Draw the box
+    c.setStrokeColor(black)
+    c.setFillColor(white)
+    c.rect(x, y, width, height, stroke=1, fill=1)
+
+    # Draw the text inside the box
+    c.setFillColor(black)
+    # Measure the width of the text
+    text_width = c.stringWidth(text, "Helvetica", 12)
+    # Center text horizontally in the box
+    text_x = x + (width - text_width) / 2
+    # Center text vertically in the box (6 is half of font size for adjustment)
+    text_y = y + height / 2 - 6
+    c.drawString(text_x, text_y, text)
+
+
+def draw_name_level(c, page_width, height, stu_name, stu_level):
+    # Define the size of the text boxes
+    box_height = 30
+    box_margin = 10  # Margin around text inside the box
+
+    # Define the text for the boxes
+    name_text = "Name"
+    name_value = stu_name
+    level_text = "Level"
+    level_value = stu_level
+
+    # Calculate the width of the text boxes based on the content
+    name_width = c.stringWidth(name_text, "Helvetica", 12)
+    name_value_width = c.stringWidth(name_value, "Helvetica", 12)
+    level_width = c.stringWidth(level_text, "Helvetica", 12)
+    level_value_width = c.stringWidth(level_value, "Helvetica", 12)
+
+    # Find the maximum width of the text boxes to use consistent width
+    max_name_width = max(name_width, level_width)
+    max_level_width = max(name_value_width, level_value_width)
+
+    # Define box width with margin
+    box_width_name = max_name_width + 2 * box_margin
+    box_width_level = max_level_width + 2 * box_margin
+
+    # Calculate total width needed for all boxes (no spacing between them)
+    total_width = 2 * (box_width_name + box_width_level)
+
+    # Calculate the starting x position to center the group of boxes
+    start_x = (page_width - total_width) / 2
+
+    # Draw the text boxes and text, ensuring no gap between boxes
+    draw_text_box(c, start_x, height,
+                  box_width_name, box_height, name_text)
+    draw_text_box(c, start_x + box_width_name,
+                  height, box_width_level, box_height, name_value)
+
+    draw_text_box(c, start_x + box_width_name + box_width_level,
+                  height, box_width_name, box_height, level_text)
+    draw_text_box(c, start_x + 2 * (box_width_name) + box_width_level,
+                  height, box_width_level, box_height, level_value)
+
+    # Return the height of the text boxes
+    return height - box_height
+
+
+def draw_summary_level(c, page_width, page_height, pairs):
+    # Define the size of the text boxes
+    box_height = 30
+    box_margin = 10  # Margin around text inside the box
+
+    # Define the text for the boxes
+    c1 = pairs[0][0]
+    v1 = pairs[0][1]
+    c2 = pairs[1][0]
+    v2 = pairs[1][1]
+    c3 = pairs[2][0]
+    v3 = pairs[2][1]
+
+    # Calculate the width of the text boxes based on the content
+    c1_width = c.stringWidth(c1, "Helvetica", 12)
+    v1_width = c.stringWidth(v1, "Helvetica", 12)
+    c2_width = c.stringWidth(c2, "Helvetica", 12)
+    v2_width = c.stringWidth(v2, "Helvetica", 12)
+    c3_width = c.stringWidth(c3, "Helvetica", 12)
+    v3_width = c.stringWidth(v3, "Helvetica", 12)
+
+    # Find the maximum width of the text boxes to use consistent width
+    max_c_width = max(c1_width, c2_width, c3_width)
+    max_v_width = max(v1_width, v2_width, v3_width)
+
+    # Define box width with margin
+    box_width_c = max_c_width + 2 * box_margin
+    box_width_v = max_v_width + 2 * box_margin
+
+    # Calculate total width needed for all boxes (no spacing between them)
+    total_width = 3 * (box_width_c + box_width_v)
+
+    # Calculate the starting x position to center the group of boxes
+    start_x = (page_width - total_width) / 2
+
+    # Draw the text boxes and text, ensuring no gap between boxes
+    draw_text_box(c, start_x, page_height,
+                  box_width_c, box_height, c1)
+    draw_text_box(c, start_x + box_width_c,
+                  page_height, box_width_v, box_height, v1)
+
+    draw_text_box(c, start_x + box_width_c + box_width_v,
+                  page_height, box_width_c, box_height, c2)
+    draw_text_box(c, start_x + 2 * (box_width_c) + box_width_v,
+                  page_height, box_width_v, box_height, v2)
+
+    draw_text_box(c, start_x + 2 * (box_width_c + box_width_v),
+                  page_height, box_width_c, box_height, c3)
+    draw_text_box(c, start_x + 3 * (box_width_c) + 2 * box_width_v,
+                  page_height, box_width_v, box_height, v3)
+
+    # Return the height of the text boxes
+    return page_height - box_height
+
+
+def draw_summary(c: canvas.Canvas, page_width: float, page_height: float, stu_name: str, stu_avg: list[str], stu_level: str):
+    c.drawString(100, page_height, "Summary of Results")
+
+    summary = [['Understanding', stu_avg[0]], ['Fluency',
+               stu_avg[1]], ['Problem Solving', stu_avg[2]]]
+    page_height = draw_name_level(
+        c, page_width, page_height - 50, stu_name, stu_level)
+    draw_summary_level(c, page_width, page_height, summary)
+
+    # Break apart understanding, fluency and problem solving
+    understanding = stu_avg[0]
+    fluency = stu_avg[1]
+    problem_solving = stu_avg[2]
+
+    c.drawString(100, page_height - 200, f"Understanding: {understanding}")
+    c.drawString(100, page_height - 250, f"Fluency: {fluency}")
+    c.drawString(100, page_height - 300, f"Problem Solving: {problem_solving}")
+
 
 def generate_pdf(tutor: str, level: str, topics: list[str], student: Student):
     c = canvas.Canvas("hello.pdf")
@@ -35,7 +177,9 @@ def generate_pdf(tutor: str, level: str, topics: list[str], student: Student):
     width, height = A4
 
     # Insert letterhead, keep aspect ratio
-    draw_letterhead(c, width, height)
+    height = draw_letterhead(c, width, height)
+    draw_summary(c, width, height, student.name,
+                 student.averages, level)
 
     c.drawString(100, 300, f"Tutor: {tutor}")
     c.drawString(100, 250, f"Level: {level}")

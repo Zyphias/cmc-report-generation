@@ -19,7 +19,7 @@ def main():
                 print("Student not found.")
             else:
                 student.pretty_print()
-                generate_pdf("Steve", "Path to Standard", [
+                generate_pdf("Steve", "Path To Advanced", [
                     "Topic 1", "Topic 2"], student)
     except KeyboardInterrupt:
         print()
