@@ -1,17 +1,33 @@
+import random
+import string
+from turtle import color
 from PIL import Image
+from comments_generator import generate_comment
 from objects.student import Student
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import black, white
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import Paragraph
 
 
 LETTER_HEAD_PATH = 'src/images/LetterHead.png'
 MAX_WIDTH = 450
-TEXT_SIZE = 12
+TEXT_SIZE = 11
 FONT = "Helvetica"
 TITLE_FONT = "Helvetica-Bold"
-TITLE_FONT_SIZE = 14
+TITLE_FONT_SIZE = 13
+
+
+def generate_random_words(num_words: int) -> str:
+    words = []
+    for _ in range(num_words):
+        # Random word length between 3 and 10
+        word_length = random.randint(3, 10)
+        word = ''.join(random.choices(string.ascii_lowercase, k=word_length))
+        words.append(word)
+    return ' '.join(words)
 
 
 def draw_letterhead(c: canvas.Canvas, page_width: float, page_height: float):
@@ -46,12 +62,16 @@ def draw_text_box(c, x, y, width, height, text):
 
     # Draw the text inside the box
     c.setFillColor(black)
-    # Measure the width of the text
+    c.setFont(FONT, TEXT_SIZE)
+
+    # Measure the width and height of the text
     text_width = c.stringWidth(text, FONT, TEXT_SIZE)
-    # Center text horizontally in the box
+    text_height = TEXT_SIZE  # Approximate text height
+
+    # Center text horizontally and vertically in the box
     text_x = x + (width - text_width) / 2
-    # Center text vertically in the box (6 is half of font size for adjustment)
-    text_y = y + height / 2 - 6
+    text_y = y + TEXT_SIZE
+
     c.drawString(text_x, text_y, text)
 
 
@@ -105,7 +125,7 @@ def draw_summary(c: canvas.Canvas, page_width: float, page_height: float, stu_na
     c.setFont(FONT, TEXT_SIZE)
 
     # Define the information to display
-    name_info = [['Name', stu_name], ['Level', stu_level]]
+    name_info = [['Name', stu_name], ['Level', stu_level], ['Mark', '86']]
     summary = [['Understanding', stu_avg[0]], ['Fluency',
                stu_avg[1]], ['Problem Solving', stu_avg[2]]]
 
@@ -114,6 +134,51 @@ def draw_summary(c: canvas.Canvas, page_width: float, page_height: float, stu_na
         c, page_width, page_height - 50, name_info)
     page_height = draw_summary_line(c, page_width, page_height, summary)
     return page_height
+
+
+def draw_comments(c, page_width, y, text, font_size=12, padding=10, width=MAX_WIDTH):
+    # Set up the style for the paragraph
+    text_style = ParagraphStyle(
+        'Normal',
+        fontName=FONT,
+        fontSize=TEXT_SIZE,
+        leading=TITLE_FONT_SIZE,
+        spaceBefore=padding,
+        spaceAfter=padding
+    )
+
+    # Create a Paragraph object for the text
+    paragraph = Paragraph(text, text_style)
+
+    # Calculate the height needed for the paragraph
+    _, text_height = paragraph.wrap(width - 2 * padding, 0)
+
+    # Set up the style for the title
+    title_style = ParagraphStyle(
+        'Title',
+        fontName=TITLE_FONT,
+        fontSize=TITLE_FONT_SIZE,
+        leading=font_size + 4,
+        spaceAfter=padding
+    )
+    title = Paragraph("Tutor Comments", title_style)
+    _, title_height = title.wrap(width - 2 * padding, 0)
+
+    # Calculate the total height including padding and title
+    total_height = text_height + title_height + 3 * padding
+
+    # Calculate the x-coordinate to center the box
+    x = (page_width - width) / 2
+
+    # Draw the box
+    c.rect(x, y - total_height, width, total_height)
+
+    # Draw the title inside the box
+    title.drawOn(c, x + padding, y - padding - title_height)
+
+    # Draw the text inside the box
+    paragraph.drawOn(c, x + padding, y - 2 * padding -
+                     title_height - text_height)
 
 
 def generate_pdf(tutor: str, level: str, topics: list[str], student: Student):
@@ -127,15 +192,10 @@ def generate_pdf(tutor: str, level: str, topics: list[str], student: Student):
 
     # Insert letterhead, keep aspect ratio
     height = draw_letterhead(c, width, height)
-    draw_summary(c, width, height, student.name,
-                 student.averages, level)
-
-    c.drawString(100, 300, f"Tutor: {tutor}")
-    c.drawString(100, 250, f"Level: {level}")
-    c.drawString(100, 200, f"Student: {student.name}")
-    c.drawString(100, 150, f"Topics: {', '.join(topics)}")
-    c.drawString(100, 100, f"Average: {student.averages}")
-    c.drawString(100, 50, f"Total: {student.get_data().feedback}")
+    height = draw_summary(c, width, height, student.name,
+                          student.averages, level)
+    draw_comments(c, width, height,
+                  generate_comment(student.name, student.averages, student.get_data().feedback))
 
     c.showPage()
     c.save()
