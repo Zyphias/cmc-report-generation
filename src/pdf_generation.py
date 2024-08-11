@@ -7,7 +7,7 @@ from reportlab.lib.colors import black, white
 
 
 LETTER_HEAD_PATH = 'src/images/LetterHead.png'
-MAX_WIDTH = 408.072
+MAX_WIDTH = 450
 TEXT_SIZE = 12
 FONT = "Helvetica"
 TITLE_FONT = "Helvetica-Bold"
@@ -55,95 +55,27 @@ def draw_text_box(c, x, y, width, height, text):
     c.drawString(text_x, text_y, text)
 
 
-def draw_name_level(c, page_width, height, stu_name, stu_level, max_width=MAX_WIDTH):
+def draw_summary_line(c, page_width, page_height, pairs, max_width=MAX_WIDTH):
     # Define the size of the text boxes
     box_height = 30
     box_margin = 10  # Margin around text inside the box
 
-    # Define the text for the boxes
-    name_text = "Name"
-    name_value = stu_name
-    level_text = "Level"
-    level_value = stu_level
-
     # Calculate the width of the text boxes based on the content
-    name_width = c.stringWidth(name_text, FONT, TEXT_SIZE)
-    name_value_width = c.stringWidth(name_value, FONT, TEXT_SIZE)
-    level_width = c.stringWidth(level_text, FONT, TEXT_SIZE)
-    level_value_width = c.stringWidth(level_value, FONT, TEXT_SIZE)
+    c_widths = [c.stringWidth(pair[0], FONT, TEXT_SIZE) for pair in pairs]
+    v_widths = [c.stringWidth(pair[1], FONT, TEXT_SIZE) for pair in pairs]
 
     # Find the maximum width of the text boxes to use consistent width
-    max_name_width = max(name_width, level_width)
-    max_level_width = max(name_value_width, level_value_width)
-
-    # Define box widths with margin
-    box_width_name = max_name_width + 2 * box_margin
-    box_width_level = max_level_width + 2 * box_margin
-
-    # Total width of one pair of boxes (name + value) plus (level + value)
-    pair_width = box_width_name + box_width_level
-
-    # Calculate total width needed for all boxes (no spacing between them)
-    total_width = 2 * pair_width
-
-    # Calculate scaling factor to fit the boxes within the max_width
-    scaling_factor = max_width / total_width
-
-    # Adjust box sizes based on scaling factor
-    scaled_box_width_name = box_width_name * scaling_factor
-    scaled_box_width_level = box_width_level * scaling_factor
-
-    # Calculate the starting x position to center the group of boxes
-    start_x = (page_width - max_width) / 2
-
-    # Draw the text boxes and text, ensuring no gap between boxes
-    draw_text_box(c, start_x, height,
-                  scaled_box_width_name, box_height, name_text)
-    draw_text_box(c, start_x + scaled_box_width_name,
-                  height, scaled_box_width_level, box_height, name_value)
-
-    draw_text_box(c, start_x + scaled_box_width_name + scaled_box_width_level,
-                  height, scaled_box_width_name, box_height, level_text)
-    draw_text_box(c, start_x + 2 * scaled_box_width_name + scaled_box_width_level,
-                  height, scaled_box_width_level, box_height, level_value)
-
-    # Return the height of the text boxes
-    return height - box_height
-
-
-def draw_summary_level(c, page_width, page_height, pairs, max_width=MAX_WIDTH):
-    # Define the size of the text boxes
-    box_height = 30
-    box_margin = 10  # Margin around text inside the box
-
-    # Define the text for the boxes
-    c1 = pairs[0][0]
-    v1 = pairs[0][1]
-    c2 = pairs[1][0]
-    v2 = pairs[1][1]
-    c3 = pairs[2][0]
-    v3 = pairs[2][1]
-
-    # Calculate the width of the text boxes based on the content
-    c1_width = c.stringWidth(c1, FONT, TEXT_SIZE)
-    v1_width = c.stringWidth(v1, FONT, TEXT_SIZE)
-    c2_width = c.stringWidth(c2, FONT, TEXT_SIZE)
-    v2_width = c.stringWidth(v2, FONT, TEXT_SIZE)
-    c3_width = c.stringWidth(c3, FONT, TEXT_SIZE)
-    v3_width = c.stringWidth(v3, FONT, TEXT_SIZE)
-
-    # Find the maximum width of the text boxes to use consistent width
-    max_c_width = max(c1_width, c2_width, c3_width)
-    max_v_width = max(v1_width, v2_width, v3_width)
+    max_c_width = max(c_widths)
+    max_v_width = max(v_widths)
 
     # Define box width with margin
     box_width_c = max_c_width + 2 * box_margin
     box_width_v = max_v_width + 2 * box_margin
 
     # Calculate total width needed for all boxes (no spacing between them)
-    total_width = 3 * (box_width_c + box_width_v)
+    total_width = len(pairs) * (box_width_c + box_width_v)
 
-    # Calculate scaling factor to fit within max_width
+    # Calculate scaling factor to fit exactly within max_width
     scaling_factor = max_width / total_width
 
     # Adjust box sizes based on scaling factor
@@ -151,27 +83,17 @@ def draw_summary_level(c, page_width, page_height, pairs, max_width=MAX_WIDTH):
     scaled_box_width_v = box_width_v * scaling_factor
 
     # Calculate the starting x position to center the group of boxes
-    scaled_total_width = 3 * (scaled_box_width_c + scaled_box_width_v)
-    start_x = (page_width - scaled_total_width) / 2
+    start_x = (page_width - max_width) / 2
 
     # Draw the text boxes and text, ensuring no gap between boxes
-    draw_text_box(c, start_x, page_height,
-                  scaled_box_width_c, box_height, c1)
-    draw_text_box(c, start_x + scaled_box_width_c,
-                  page_height, scaled_box_width_v, box_height, v1)
-
-    draw_text_box(c, start_x + scaled_box_width_c + scaled_box_width_v,
-                  page_height, scaled_box_width_c, box_height, c2)
-    draw_text_box(c, start_x + 2 * (scaled_box_width_c) + scaled_box_width_v,
-                  page_height, scaled_box_width_v, box_height, v2)
-
-    draw_text_box(c, start_x + 2 * (scaled_box_width_c + scaled_box_width_v),
-                  page_height, scaled_box_width_c, box_height, c3)
-    draw_text_box(c, start_x + 3 * (scaled_box_width_c) + 2 * scaled_box_width_v,
-                  page_height, scaled_box_width_v, box_height, v3)
-
-    # Print width of the boxes for debugging
-    print(f"Scaled total width: {scaled_total_width}")
+    current_x = start_x
+    for c_text, v_text in pairs:
+        draw_text_box(c, current_x, page_height,
+                      scaled_box_width_c, box_height, c_text)
+        current_x += scaled_box_width_c
+        draw_text_box(c, current_x, page_height,
+                      scaled_box_width_v, box_height, v_text)
+        current_x += scaled_box_width_v
 
     # Return the height of the text boxes
     return page_height - box_height
@@ -182,16 +104,20 @@ def draw_summary(c: canvas.Canvas, page_width: float, page_height: float, stu_na
     c.drawString(100, page_height, "Summary of Results")
     c.setFont(FONT, TEXT_SIZE)
 
+    # Define the information to display
+    name_info = [['Name', stu_name], ['Level', stu_level]]
     summary = [['Understanding', stu_avg[0]], ['Fluency',
                stu_avg[1]], ['Problem Solving', stu_avg[2]]]
-    page_height = draw_name_level(
-        c, page_width, page_height - 50, stu_name, stu_level)
-    page_height = draw_summary_level(c, page_width, page_height, summary)
+
+    # Draw the text boxes for the information
+    page_height = draw_summary_line(
+        c, page_width, page_height - 50, name_info)
+    page_height = draw_summary_line(c, page_width, page_height, summary)
     return page_height
 
 
 def generate_pdf(tutor: str, level: str, topics: list[str], student: Student):
-    c = canvas.Canvas("hello.pdf")
+    c = canvas.Canvas("test.pdf")
 
     # Acquire dimensions of the page
     width, height = A4
