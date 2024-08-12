@@ -20,7 +20,9 @@ def main():
             else:
                 student.pretty_print()
                 generate_pdf("Steve", "Path To Advanced", [
-                    "Topic 1", "Topic 2"], student)
+                    "Midpoint, Gradient, Distance", "Pythagoras' Theorem", "Calculus", "Binomial Distribution",
+                    "Yearly Study", "Midpoint, Gradient, Distance", "Pythagoras' Theorem", "Calculus",
+                    "Binomial Distribution", "Yearly Study"], student)
     except KeyboardInterrupt:
         print()
         print("Keyboard interrupt received, shutting down...")

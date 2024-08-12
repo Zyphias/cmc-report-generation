@@ -11,7 +11,7 @@ def generate_comment(stu_name: str, averages: list[str], feedback: list[str]) ->
     #     model="gpt-4o-mini",
     #     messages=[
     #         {"role": "system", "content": f"""You are a tutor's assistant.
-    #             Given each week's feedback for the student and their averages,
+    #             Given each week's comments for the student and their averages,
     #             generate a 100 word comment for the student's end of term feedback.
 
     #             It should not mention the student's last name and should not contain quantitative data.
@@ -23,7 +23,7 @@ def generate_comment(stu_name: str, averages: list[str], feedback: list[str]) ->
 
     #             Please omit any 'keep up the good work' or 'try harder' comments.
 
-    #             Weekly Feedback: {feedback}
+    #             Weekly Feedback: {comments}
     #             Student Name: {stu_name}
     #             Student Averages (Understanding, Fluency, Problem Solving): {averages}
 

@@ -10,6 +10,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.colors import black, white
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import Paragraph
+from reportlab.lib.colors import HexColor
 
 
 LETTER_HEAD_PATH = 'src/images/LetterHead.png'
@@ -18,6 +19,9 @@ TEXT_SIZE = 11
 FONT = "Helvetica"
 TITLE_FONT = "Helvetica-Bold"
 TITLE_FONT_SIZE = 13
+UNDERSTANDING_COLOUR = '#69bf4b'
+FLUENCY_COLOUR = '#003965'
+PS_COLOUR = '#01665e'
 
 
 def generate_random_words(num_words: int) -> str:
@@ -136,7 +140,7 @@ def draw_summary(c: canvas.Canvas, page_width: float, page_height: float, stu_na
     return page_height
 
 
-def draw_comments(c, page_width, y, text, font_size=12, padding=10, width=MAX_WIDTH):
+def draw_comments(c, page_width, y, text, font_size=12, padding=10, width=MAX_WIDTH) -> float:
     # Set up the style for the paragraph
     text_style = ParagraphStyle(
         'Normal',
@@ -180,6 +184,124 @@ def draw_comments(c, page_width, y, text, font_size=12, padding=10, width=MAX_WI
     paragraph.drawOn(c, x + padding, y - 2 * padding -
                      title_height - text_height)
 
+    return y - total_height - 20
+
+
+def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, width=MAX_WIDTH):
+
+    # Include colour keys
+    c.setFillColor(black)
+    c.setFont(TITLE_FONT, TITLE_FONT_SIZE)
+    c.drawString(100, page_height - 10, "Weekly Feedback")
+    page_height -= 20
+    c.setFont(FONT, TEXT_SIZE)
+
+    # Constants
+    GRAPH_HEIGHT = 180
+    BOTTOM_OF_GRAPH = page_height - GRAPH_HEIGHT
+    EMPTY_POINT_HEIGHT = 1
+    BARS_PER_GROUP = 3
+    GAP_WIDTH = 5  # Gap width between groups of bars
+    TOPIC_LABEL_OFFSET = 10  # Offset from the bottom of the bars to the topic label
+    INITIAL_GAP_WIDTH = 5  # Define the initial gap before the first group of bars
+    FONT_SIZE = 8  # Font size of the topic labels
+
+    # Define colors for the bars
+    colors = [
+        HexColor(UNDERSTANDING_COLOUR),
+        HexColor(FLUENCY_COLOUR),
+        HexColor(PS_COLOUR)
+    ]
+
+    # Draw the axes
+    c.setStrokeColor(black)
+    c.setLineWidth(1)
+    c.line((page_width - width) / 2, page_height - GRAPH_HEIGHT,
+           (page_width + width) / 2, page_height - GRAPH_HEIGHT)
+    c.line((page_width - width) / 2, page_height,
+           (page_width - width) / 2, page_height - GRAPH_HEIGHT)
+
+    # Draw notches and labels on the y-axis
+    letters = ['', 'E', 'D', 'C', 'B', 'A']
+    num_letters = len(letters)
+
+    for i, letter in enumerate(letters):
+        y = BOTTOM_OF_GRAPH + (GRAPH_HEIGHT * i / (num_letters - 1))
+        c.line((page_width - width) / 2, y, (page_width - width) / 2 - 5, y)
+        c.drawString((page_width - width) / 2 - 20, y - 5, letter)
+
+    # Prepare data
+    num_data_points = len(data)
+    data = [str(item) if isinstance(item, str) else '' for item in data]
+
+    # Calculate bar dimensions
+    bar_width = (width - (GAP_WIDTH * (num_data_points //
+                 BARS_PER_GROUP))) / num_data_points
+
+    # Draw bars
+    for i, letter in enumerate(data):
+        # Calculate the x position for each bar
+        group_index = i // BARS_PER_GROUP
+        bar_index_in_group = i % BARS_PER_GROUP
+        # Include the initial gap before the first group of bars
+        x = (page_width - width) / 2 + INITIAL_GAP_WIDTH + \
+            (i * bar_width) + (group_index * GAP_WIDTH)
+
+        # Set the color for the current bar
+        c.setFillColor(colors[bar_index_in_group])
+        c.setLineWidth(0.5)
+
+        # Handle empty strings
+        if letter == '':
+            y = BOTTOM_OF_GRAPH + EMPTY_POINT_HEIGHT
+            bar_height = EMPTY_POINT_HEIGHT
+        else:
+            y = BOTTOM_OF_GRAPH + \
+                (GRAPH_HEIGHT * letters.index(letter) / (num_letters - 1))
+            bar_height = BOTTOM_OF_GRAPH - y
+
+        # Draw the bar
+        c.rect(x, y, bar_width, bar_height, fill=1)
+
+        c.setFillColor(black)
+
+    for i, topic in enumerate(topics):
+        # Calculate the x position for each group of three bars
+        group_start_index = i * BARS_PER_GROUP
+        # Include the initial gap before the first group of bars
+        group_x_start = (page_width - width) / 2 + INITIAL_GAP_WIDTH + \
+            (group_start_index * bar_width) + (i * GAP_WIDTH)
+        group_x_center = group_x_start + (BARS_PER_GROUP * bar_width) / 2
+
+        # Adjust the topic_x to move the text to the right
+        RIGHT_OFFSET = 3  # Adjust this value to move the text further to the right
+        topic_x = group_x_center + RIGHT_OFFSET
+
+        # Set the font and size for the topic labels
+        c.setFont(FONT, FONT_SIZE)
+        topic_width = c.stringWidth(topic, FONT, FONT_SIZE)
+        topic_height = FONT_SIZE  # Assuming height is approximately equal to font size
+
+        # Calculate the position for the vertical text
+        topic_y = BOTTOM_OF_GRAPH - TOPIC_LABEL_OFFSET - \
+            topic_width  # Adjusted y position
+
+        # Save the state of the canvas
+        c.saveState()
+
+        # Translate the canvas to the center of where the text will be drawn
+        c.translate(topic_x, topic_y)
+
+        # Rotate the canvas 90 degrees around the new origin
+        c.rotate(90)
+
+        # Draw the text
+        c.drawString(0, 0, topic)
+
+        # Restore the canvas state
+        c.restoreState()
+    return page_height - 200
+
 
 def generate_pdf(tutor: str, level: str, topics: list[str], student: Student):
     c = canvas.Canvas("test.pdf")
@@ -194,8 +316,10 @@ def generate_pdf(tutor: str, level: str, topics: list[str], student: Student):
     height = draw_letterhead(c, width, height)
     height = draw_summary(c, width, height, student.name,
                           student.averages, level)
-    draw_comments(c, width, height,
-                  generate_comment(student.name, student.averages, student.get_data().feedback))
+    height = draw_comments(c, width, height,
+                           generate_comment(student.name, student.averages, student.get_data().comments))
+    height = draw_graph(
+        c, width, height, student.get_data().get_no_hw_feedback(), topics)
 
     c.showPage()
     c.save()

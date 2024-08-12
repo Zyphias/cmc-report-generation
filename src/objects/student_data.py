@@ -11,6 +11,10 @@ class StudentData:
     def get_feedback(self) -> list[str]:
         return self.feedback
 
+    def get_no_hw_feedback(self) -> list[str]:
+        # Remove every 4th element
+        return [self.feedback[i] for i in range(len(self.feedback)) if i % 4 != 3]
+
     def get_comments(self) -> list[str]:
         return self.comments
 
