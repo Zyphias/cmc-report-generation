@@ -205,6 +205,7 @@ def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, width=MA
     TOPIC_LABEL_OFFSET = 10  # Offset from the bottom of the bars to the topic label
     INITIAL_GAP_WIDTH = 5  # Define the initial gap before the first group of bars
     FONT_SIZE = 8  # Font size of the topic labels
+    RIGHT_OFFSET = 3  # Adjust this value to move the topic text further to the right
 
     # Define colors for the bars
     colors = [
@@ -236,7 +237,7 @@ def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, width=MA
 
     # Calculate bar dimensions
     bar_width = (width - (GAP_WIDTH * (num_data_points //
-                 BARS_PER_GROUP))) / num_data_points
+                                       BARS_PER_GROUP))) / num_data_points
 
     # Draw bars
     for i, letter in enumerate(data):
@@ -274,7 +275,6 @@ def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, width=MA
         group_x_center = group_x_start + (BARS_PER_GROUP * bar_width) / 2
 
         # Adjust the topic_x to move the text to the right
-        RIGHT_OFFSET = 3  # Adjust this value to move the text further to the right
         topic_x = group_x_center + RIGHT_OFFSET
 
         # Set the font and size for the topic labels
