@@ -141,6 +141,8 @@ def draw_summary(c: canvas.Canvas, page_width: float, page_height: float, stu_na
 
 
 def draw_comments(c, page_width, y, text, font_size=12, padding=10, width=MAX_WIDTH) -> float:
+    text = text.replace("\n", "<br/>")
+
     # Set up the style for the paragraph
     text_style = ParagraphStyle(
         'Normal',
