@@ -1,3 +1,4 @@
+import os
 import random
 import string
 from turtle import color
@@ -356,13 +357,26 @@ def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, width=MA
     return page_height - 200
 
 
-def generate_pdf(tutor: str, level: str, topics: list[str], student: Student):
-    c = canvas.Canvas("test.pdf")
+def generate_pdf(tutor: str, level: str, topics: list[str], student: Student, period: str):
+    # Define the folder where you want to save the PDFs
+    folder_path = "reports"
+
+    # Ensure the reports directory exists
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
+    # Create the file name with the path
+    print_name = student.name.lower().replace(" ", "_")
+    file_name = f"{print_name}_{period}.pdf"
+    file_path = os.path.join(folder_path, file_name)
+
+    # Create the canvas with the specified path
+    c = canvas.Canvas(file_path)
 
     # Acquire dimensions of the page
     width, height = A4
 
-    # set font size
+    # Set font size
     c.setFont(FONT, TEXT_SIZE)
 
     # Insert letterhead, keep aspect ratio
@@ -374,6 +388,8 @@ def generate_pdf(tutor: str, level: str, topics: list[str], student: Student):
     height = draw_graph(
         c, width, height, student.get_data().get_no_hw_feedback(), topics)
 
+    # Finalize the PDF
     c.showPage()
     c.save()
-    pass
+
+    print(f"PDF saved at: {file_path}")

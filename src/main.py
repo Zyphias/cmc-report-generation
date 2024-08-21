@@ -19,10 +19,11 @@ def main():
                 print("Student not found.")
             else:
                 student.pretty_print()
+                period = year.get_period()
                 generate_pdf("Steve", "Path To Advanced", [
                     "Midpoint, Gradient, Distance", "Pythagoras' Theorem", "Calculus", "Binomial Distribution",
                     "Yearly Study", "Midpoint, Gradient, Distance", "Pythagoras' Theorem", "Calculus",
-                    "Binomial Distribution", "Yearly Study"], student)
+                    "Binomial Distribution", "Yearly Study"], student, period)
     except KeyboardInterrupt:
         print()
         print("Keyboard interrupt received, shutting down...")
