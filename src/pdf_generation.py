@@ -123,13 +123,13 @@ def draw_summary_line(c, page_width, page_height, pairs, max_width=MAX_WIDTH):
     return page_height - box_height
 
 
-def draw_summary(c: canvas.Canvas, page_width: float, page_height: float, stu_name: str, stu_avg: list[str], stu_level: str) -> float:
+def draw_summary(c: canvas.Canvas, page_width: float, page_height: float, stu_name: str, stu_avg: list[str], stu_mark: str, stu_level: str) -> float:
     c.setFont(TITLE_FONT, TITLE_FONT_SIZE)
     c.drawString(100, page_height, "Summary of Results")
     c.setFont(FONT, TEXT_SIZE)
 
     # Define the information to display
-    name_info = [['Name', stu_name], ['Level', stu_level], ['Mark', '86']]
+    name_info = [['Name', stu_name], ['Level', stu_level], ['Mark', stu_mark]]
     summary = [['Understanding', stu_avg[0]], ['Fluency',
                stu_avg[1]], ['Problem Solving', stu_avg[2]]]
 
@@ -368,7 +368,7 @@ def generate_pdf(tutor: str, level: str, topics: list[str], student: Student):
     # Insert letterhead, keep aspect ratio
     height = draw_letterhead(c, width, height)
     height = draw_summary(c, width, height, student.name,
-                          student.averages, level)
+                          student.averages, student.mark, level)
     height = draw_comments(c, width, height,
                            generate_comment(student.name, student.averages, student.get_data().comments))
     height = draw_graph(

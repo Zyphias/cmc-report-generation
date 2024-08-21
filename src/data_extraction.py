@@ -95,8 +95,15 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
 
                 # Grab all data from that row
                 student_data = df.iloc[j, 2:].to_list()
+                # Pop the last element (the mark), turn into whole number and
+                mark = str(student_data.pop())
+                if mark != 'nan':
+                    # remove the decimal point and values after
+                    mark = mark.split('.')[0]
+                else:
+                    mark = 'N/A'
                 student = Student(
-                    student_name, parse_student_data(student_data))
+                    student_name, mark, parse_student_data(student_data))
 
                 students.append(student)
                 j += 1
