@@ -187,14 +187,72 @@ def draw_comments(c, page_width, y, text, font_size=12, padding=10, width=MAX_WI
     return y - total_height - 20
 
 
+def draw_key(c: canvas.Canvas, page_width, page_height, colors, width=MAX_WIDTH):
+    # Define the key dimensions and spacing
+    key_radius = 6  # Radius of the circle
+    key_spacing = 50  # Space between keys, adjusted for text length
+
+    # Strings corresponding to each key
+    labels = ['Understanding', 'Fluency', 'Problem Solving']
+
+    # Set font size to 10pt
+    font_size = 10
+    c.setFont("Helvetica", font_size)
+
+    # Calculate the total width needed for keys and labels
+    total_keys_width = 0
+    key_label_pairs = []
+    for i, label in enumerate(labels):
+        # Calculate the width of the label at 10pt font size
+        label_width = c.stringWidth(label, "Helvetica", font_size)
+        # Calculate the total width of the key and label pair
+        # 5 units of padding between key and label
+        pair_width = 2 * key_radius + label_width + 5
+        key_label_pairs.append(pair_width)
+        total_keys_width += pair_width
+
+    # Add the spacing between keys
+    total_keys_width += (len(colors) - 1) * key_spacing
+
+    # Calculate the starting x position to center the keys and labels
+    key_x = (page_width - total_keys_width) / 2
+    key_y = page_height
+
+    # Draw the keys (as circles) and their labels
+    for i, color in enumerate(colors):
+        c.setFillColor(color)
+        # Draw a circle with center at (key_x + key_radius, key_y)
+        c.circle(key_x + key_radius, key_y, key_radius, fill=1)
+
+        c.setFillColor(black)
+        # Vertically center the text with the circle
+        text_y = key_y - (font_size / 2)
+        c.drawString(key_x + 2 * key_radius + 5, text_y, labels[i])
+
+        # Move the x position to the next key position
+        key_x += key_label_pairs[i] + key_spacing
+
+    # Return the new y position after drawing the keys
+    return key_y - 20  # Adjust to give space for the next element below
+
+
 def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, width=MAX_WIDTH):
 
     # Include colour keys
     c.setFillColor(black)
     c.setFont(TITLE_FONT, TITLE_FONT_SIZE)
     c.drawString(100, page_height - 10, "Weekly Feedback")
-    page_height -= 20
     c.setFont(FONT, TEXT_SIZE)
+    page_height -= 28
+
+    # Define colors for the bars
+    colors = [
+        HexColor(UNDERSTANDING_COLOUR),
+        HexColor(FLUENCY_COLOUR),
+        HexColor(PS_COLOUR)
+    ]
+
+    page_height = draw_key(c, page_width, page_height, colors)
 
     # Constants
     GRAPH_HEIGHT = 180
@@ -206,13 +264,6 @@ def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, width=MA
     INITIAL_GAP_WIDTH = 5  # Define the initial gap before the first group of bars
     FONT_SIZE = 8  # Font size of the topic labels
     RIGHT_OFFSET = 3  # Adjust this value to move the topic text further to the right
-
-    # Define colors for the bars
-    colors = [
-        HexColor(UNDERSTANDING_COLOUR),
-        HexColor(FLUENCY_COLOUR),
-        HexColor(PS_COLOUR)
-    ]
 
     # Draw the axes
     c.setStrokeColor(black)
