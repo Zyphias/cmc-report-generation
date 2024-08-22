@@ -9,9 +9,9 @@ class PathType(Enum):
 
     def __str__(self):
         if self.value == 5.2:
-            return "Path to Standard"
+            return "Standard"
         elif self.value == 5.3:
-            return "Path to Advanced"
+            return "Advanced"
         elif self.value == 'advanced':
             return "Advanced"
         elif self.value == 'standard':
