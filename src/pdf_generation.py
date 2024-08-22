@@ -395,6 +395,11 @@ def generate_pdf(tutor: str, level: str, topics: list[str], student: Student, pe
     height = draw_graph(
         c, width, height, student.get_data().get_no_hw_feedback(), topics, days_away)
 
+    # Draw centered footer
+    c.setFont(FONT, 8)
+    c.drawCentredString(
+        width / 2, 20, f"© Cherrybrook Maths Coaching 2024")
+
     # Finalize the PDF
     c.showPage()
     c.save()
