@@ -20,7 +20,7 @@ def main():
             else:
                 student.pretty_print()
                 period = year.get_period()
-                generate_pdf("Steve", "Path To Advanced", [
+                generate_pdf("Steve", "Y9 Advanced", [
                     "Midpoint, Gradient, Distance", "Pythagoras' Theorem", "Calculus", "Binomial Distribution",
                     "Yearly Study", "Midpoint, Gradient, Distance", "Pythagoras' Theorem", "Calculus",
                     "Binomial Distribution", "Yearly Study"], student, period)

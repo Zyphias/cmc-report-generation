@@ -130,7 +130,7 @@ def draw_summary(c: canvas.Canvas, page_width: float, page_height: float, stu_na
     c.setFont(FONT, TEXT_SIZE)
 
     # Define the information to display
-    name_info = [['Name', stu_name], ['Level', stu_level], ['Mark', stu_mark]]
+    name_info = [['Name', stu_name], ['Class', stu_level], ['Mark', stu_mark]]
     summary = [['Understanding', stu_avg[0]], ['Fluency',
                stu_avg[1]], ['Problem Solving', stu_avg[2]]]
 
