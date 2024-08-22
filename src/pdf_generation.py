@@ -148,7 +148,7 @@ def draw_comments(c, page_width, y, text, font_size=12, padding=10, width=MAX_WI
     text_style = ParagraphStyle(
         'Normal',
         fontName=FONT,
-        fontSize=TEXT_SIZE,
+        fontSize=TEXT_SIZE - 2,
         leading=TITLE_FONT_SIZE,
         spaceBefore=padding,
         spaceAfter=padding
@@ -164,7 +164,7 @@ def draw_comments(c, page_width, y, text, font_size=12, padding=10, width=MAX_WI
     title_style = ParagraphStyle(
         'Title',
         fontName=TITLE_FONT,
-        fontSize=TITLE_FONT_SIZE,
+        fontSize=TITLE_FONT_SIZE - 2,
         leading=font_size + 4,
         spaceAfter=padding
     )
