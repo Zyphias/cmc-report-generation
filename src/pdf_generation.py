@@ -258,7 +258,7 @@ def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, width=MA
     page_height = draw_key(c, page_width, page_height, colors)
 
     # Constants
-    GRAPH_HEIGHT = 180
+    GRAPH_HEIGHT = 130
     BOTTOM_OF_GRAPH = page_height - GRAPH_HEIGHT
     EMPTY_POINT_HEIGHT = 1
     BARS_PER_GROUP = 3
