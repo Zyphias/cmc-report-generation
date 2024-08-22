@@ -1,15 +1,16 @@
 from data_extraction import csv_to_object
+from objects.year import Year
 from pdf_generation import generate_pdf
 
 
-def generate_year_reports(year):
+def generate_year_reports(year: Year):
     period = year.get_period()
     grade = f"Y{year.get_year()}"
     for class_ in year.get_classes():
         level = f"{grade} {class_.get_level()}"
         for student in class_.get_students():
             generate_pdf("Steve", level,
-                         class_.get_topics(), student, period)
+                         class_.get_topics(), student, period, student.get_days_away())
 
 
 def main():

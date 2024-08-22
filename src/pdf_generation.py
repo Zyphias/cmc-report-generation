@@ -239,7 +239,7 @@ def draw_key(c: canvas.Canvas, page_width, page_height, colors, width=MAX_WIDTH)
     return key_y - 20  # Adjust to give space for the next element below
 
 
-def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, width=MAX_WIDTH):
+def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, days_away: list[int], width=MAX_WIDTH):
 
     # Include colour keys
     c.setFillColor(black)
@@ -349,15 +349,22 @@ def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, width=MA
         # Rotate the canvas 90 degrees around the new origin
         c.rotate(90)
 
-        # Draw the text
-        c.drawString(0, 0, topic)
+        # if i is in days_away, change the color of the text
+        if i + 1 in days_away:
+            c.setFillColor(HexColor('#ff0000'))
+            # Draw the text
+            c.drawString(0, 0, topic)
+            c.setFillColor(black)
+        else:
+            # Draw the text
+            c.drawString(0, 0, topic)
 
         # Restore the canvas state
         c.restoreState()
     return page_height - 200
 
 
-def generate_pdf(tutor: str, level: str, topics: list[str], student: Student, period: str):
+def generate_pdf(tutor: str, level: str, topics: list[str], student: Student, period: str, days_away: list[int] = None):
     # Define the folder where you want to save the PDFs
     folder_path = "reports"
 
@@ -386,7 +393,7 @@ def generate_pdf(tutor: str, level: str, topics: list[str], student: Student, pe
     height = draw_comments(c, width, height,
                            generate_comment(student.name, student.averages, student.get_data().comments))
     height = draw_graph(
-        c, width, height, student.get_data().get_no_hw_feedback(), topics)
+        c, width, height, student.get_data().get_no_hw_feedback(), topics, days_away)
 
     # Finalize the PDF
     c.showPage()
