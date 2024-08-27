@@ -7,9 +7,10 @@ def generate_year_reports(year: Year):
     period = year.get_period()
     grade = f"Y{year.get_year()}"
     for class_ in year.get_classes():
+        tutor = class_.get_tutor()
         level = f"{grade} {class_.get_level()}"
         for student in class_.get_students():
-            generate_pdf("Steve", level,
+            generate_pdf(year.get_year(), tutor, level,
                          class_.get_topics(), student, period, student.get_days_away())
 
 
