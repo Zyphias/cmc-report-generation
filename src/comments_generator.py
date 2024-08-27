@@ -53,7 +53,7 @@ def generate_comment(stu_name: str, averages: list[str], feedback: list[str]) ->
     feedback = feedback.replace("-", "")
     # Add new line after each full stop
     feedback = feedback.replace(". ", ".\n")
-    print(feedback)
+    # print(feedback)
     return feedback
 
     # return """Gemma demonstrates a solid understanding of key concepts, showing improvement after revising foundational topics.

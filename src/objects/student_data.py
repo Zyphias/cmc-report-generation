@@ -20,7 +20,7 @@ class StudentData:
 
     def get_days_away(self) -> list[int]:
         # Return the index of the weeks where comments say 'away'. Integers
-        return [i + 1 for i, comment in enumerate(self.comments) if "away" in comment.lower()]
+        return [i + 1 for i, comment in enumerate(self.comments) if isinstance(comment, str) and "away" in comment.lower()]
 
     def get_averages(self) -> list[str]:
         def extract_and_convert(feedback, start, step):

@@ -15,7 +15,7 @@ def generate_year_reports(year: Year):
 
 
 def main():
-    csv_file = 'src/csv_store/24t3y9.csv'
+    csv_file = 'src/csv_store/24t3y8.csv'
 
     # Read a CSV file and generate a new Year object
     year = csv_to_object(csv_file)
