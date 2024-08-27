@@ -240,7 +240,12 @@ def draw_key(c: canvas.Canvas, page_width, page_height, colors, width=MAX_WIDTH)
     return key_y - 20  # Adjust to give space for the next element below
 
 
-def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, days_away: list[int], width=MAX_WIDTH):
+def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, days_away: list[int], display_weeks, width=MAX_WIDTH-100):
+
+    # Limit the data and topics to the first n weeks
+    # Assuming each week has 3 data points (Understanding, Fluency, PS)
+    data = data[:display_weeks * 3]
+    topics = topics[:display_weeks]
 
     # Include colour keys
     c.setFillColor(black)
@@ -394,7 +399,7 @@ def generate_pdf(tutor: str, level: str, topics: list[str], student: Student, pe
     height = draw_comments(c, width, height,
                            generate_comment(student.name, student.averages, student.get_data().comments))
     height = draw_graph(
-        c, width, height, student.get_data().get_no_hw_feedback(), topics, days_away)
+        c, width, height, student.get_data().get_no_hw_feedback(), topics, days_away, 6)
 
     # Draw centered footer
     c.setFont(FONT, 8)
