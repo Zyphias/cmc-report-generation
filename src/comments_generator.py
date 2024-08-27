@@ -16,17 +16,17 @@ def generate_comment(stu_name: str, averages: list[str], feedback: list[str]) ->
         messages=[
             {"role": "system", "content": f"""You are a tutor's assistant.
                 Given each week's comments for the student and their averages,
-                generate three dot points. Do not include the actual dot points.
+                generate three dot points.
 
                 - one with general understanding
                 - one with work ethic
                 - whether they are progressing or not. If they are not, be clear about it.
 
-                It should not mention the student's last name and should not contain quantitative data.
+                Ensure to make mention to the student's first name. It should not mention the student's last name and should not contain quantitative data.
                 Instead, it should focus on the qualitative aspects of the student's learning and aspect.
                 Do not talk about any specific topics.
 
-                It should sound like a comment a teacher would write on a report card.
+                It should sound like comments a teacher would write on a report card.
                 Please address it as third person and be professional.
 
                 Please omit any 'keep up the good work' or 'try harder' comments.
@@ -36,10 +36,13 @@ def generate_comment(stu_name: str, averages: list[str], feedback: list[str]) ->
                 Student Name: {stu_name}
                 Student Averages (Understanding, Fluency, Problem Solving): {averages}
 
-                The dot points need to be short and precise.
+                The dot points need to be short and precise. They should all be around 20 words long.
                 Please refer to assignments as tasks and efforts as effort.
                 Do not use semicolons, instead use commas in their place.
                 Instead of 'making effort' use 'demostrating effort'.
+                Ensure problem solving is 2 words not one.
+                Before submitting, please ensure that the feedback is concise and professional and that it makes gramattical
+                and syntactical sense.
 
             """},
         ]

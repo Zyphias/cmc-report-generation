@@ -12,6 +12,7 @@ from reportlab.lib.colors import black, white
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import Paragraph
 from reportlab.lib.colors import HexColor
+from PyPDF2 import PdfReader, PdfWriter
 
 
 LETTER_HEAD_PATH = 'src/images/LetterHead.png'
@@ -130,7 +131,7 @@ def draw_summary(c: canvas.Canvas, page_width: float, page_height: float, stu_na
     c.setFont(FONT, TEXT_SIZE)
 
     # Define the information to display
-    name_info = [['Name', stu_name], ['Class', stu_level], ['Mark', stu_mark]]
+    name_info = [['Name', stu_name], ['Class', stu_level]]
     summary = [['Understanding', stu_avg[0]], ['Fluency',
                stu_avg[1]], ['Problem Solving', stu_avg[2]]]
 
@@ -403,5 +404,27 @@ def generate_pdf(tutor: str, level: str, topics: list[str], student: Student, pe
     # Finalize the PDF
     c.showPage()
     c.save()
+
+    with open(f"{file_path}", "rb") as existing_pdf:
+        reader = PdfReader(existing_pdf)
+
+        # Create a writer object for the final output PDF
+        writer = PdfWriter()
+
+        # Add all pages from the original PDF
+        for page in reader.pages:
+            writer.add_page(page)
+
+        # Read the additional PDF
+        with open("src/metric.pdf", "rb") as additional_pdf:
+            additional_reader = PdfReader(additional_pdf)
+
+            # Add all pages from the additional PDF
+            for page in additional_reader.pages:
+                writer.add_page(page)
+
+        # Save the final PDF
+        with open(f"{file_path}", "wb") as final_pdf:
+            writer.write(final_pdf)
 
     print(f"PDF saved at: {file_path}")
