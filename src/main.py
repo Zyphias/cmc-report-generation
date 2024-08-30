@@ -1,9 +1,10 @@
 from data_extraction import csv_to_object
+from get_email import get_contact_email
 from objects.year import Year
 from pdf_generation import generate_pdf
 
 
-def generate_year_reports(year):
+def generate_year_reports(year: Year):
     period = year.get_period()
     grade = f"Y{year.get_year()}"
     for class_ in year.get_classes():
@@ -13,6 +14,8 @@ def generate_year_reports(year):
         for student in class_.get_students():
             generate_pdf(year.get_year(), tutor, level, topics,
                          student, period, student.get_days_away())
+            print(
+                f"Student: {student.get_name()}, Parent Email: {get_contact_email(student.get_name())}")
 
 
 def generate_student_report(student_name, student_year, csv_files):
@@ -28,6 +31,8 @@ def generate_student_report(student_name, student_year, csv_files):
                 level = f"Y{year.get_year()} {class_.get_level()}"
                 generate_pdf(year.get_year(), class_.get_tutor(), level, class_.get_topics(),
                              student, year.get_period(), student.get_days_away())
+                print(
+                    f"Student: {student_name}, Parent Email: {get_contact_email(student_name)}")
                 return
 
     print(f"Student {student_name} not found in year {student_year}.")
