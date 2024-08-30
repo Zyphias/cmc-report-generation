@@ -39,6 +39,8 @@ def generate_comment(stu_name: str, averages: list[str], feedback: list[str]) ->
                 - Please refer to assignments as tasks and efforts as effort.
                 - Instead of 'making effort' use 'demostrating effort'.
                 - Instead of 'problemsolving', use 'problem solving'.
+                - Li Qing is a 'he', Parsa is also a 'he'
+                - Do not mention school.
                 Before submitting, please ensure that the feedback is concise and professional and that it makes gramattical and syntactical sense.
             """},
         ]
