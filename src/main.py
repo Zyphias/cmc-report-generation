@@ -3,49 +3,71 @@ from objects.year import Year
 from pdf_generation import generate_pdf
 
 
-def generate_year_reports(year: Year):
+def generate_year_reports(year):
     period = year.get_period()
     grade = f"Y{year.get_year()}"
     for class_ in year.get_classes():
         tutor = class_.get_tutor()
         level = f"{grade} {class_.get_level()}"
+        topics = class_.get_topics()
         for student in class_.get_students():
-            generate_pdf(year.get_year(), tutor, level,
-                         class_.get_topics(), student, period, student.get_days_away())
+            generate_pdf(year.get_year(), tutor, level, topics,
+                         student, period, student.get_days_away())
+
+
+def generate_student_report(student_name, student_year, csv_files):
+    csv_file = csv_files.get(student_year)
+    if not csv_file:
+        print(f"No CSV file found for year {student_year}.")
+        return
+
+    year = csv_to_object(csv_file)
+    for class_ in year.get_classes():
+        for student in class_.get_students():
+            if student.get_name() == student_name:
+                level = f"Y{year.get_year()} {class_.get_level()}"
+                generate_pdf(year.get_year(), class_.get_tutor(), level, class_.get_topics(),
+                             student, year.get_period(), student.get_days_away())
+                return
+
+    print(f"Student {student_name} not found in year {student_year}.")
+
+
+def generate_single_year_report(student_year, csv_files):
+    csv_file = csv_files.get(student_year)
+    if not csv_file:
+        print(f"No CSV file found for year {student_year}.")
+        return
+
+    year = csv_to_object(csv_file)
+    generate_year_reports(year)
 
 
 def main():
-    y10_csv_file = 'src/csv_store/24t3y10.csv'
-    y9_csv_file = 'src/csv_store/24t3y9.csv'
-    y8_csv_file = 'src/csv_store/24t3y8.csv'
-    y7_csv_file = 'src/csv_store/24t3y7.csv'
+    csv_files = {
+        '7': 'src/csv_store/24t3y7.csv',
+        '8': 'src/csv_store/24t3y8.csv',
+        '9': 'src/csv_store/24t3y9.csv',
+        '10': 'src/csv_store/24t3y10.csv'
+    }
 
-    response = input("Do you want a single student report? y/n: ")
-    if response == 'y':
-        stu_name = input("Enter the student's name: ")
-        stu_year = input("Enter the student's year: 7/8/9/10 ")
-        if stu_year == '7':
-            csv_file = y7_csv_file
-        elif stu_year == '8':
-            csv_file = y8_csv_file
-        elif stu_year == '9':
-            csv_file = y9_csv_file
-        elif stu_year == '10':
-            csv_file = y10_csv_file
+    response = input(
+        "Do you want to generate a single student report, a single year report, or all reports? (student/year/all): ").strip().lower()
 
-        year = csv_to_object(csv_file)
-        for class_ in year.get_classes():
-            for s in class_.get_students():
-                if s.get_name() == stu_name:
-                    generate_pdf(year.get_year(), class_.get_tutor(), f"Y{year.get_year()} {class_.get_level()}",
-                                 class_.get_topics(), s, year.get_period(), s.get_days_away())
-                    return
+    if response == 'student':
+        student_name = input("Enter the student's name: ").strip()
+        student_year = input("Enter the student's year: 7/8/9/10 ").strip()
+        generate_student_report(student_name, student_year, csv_files)
 
-    # Read a CSV file and generate a new Year object
-    year = csv_to_object(csv_file)
+    elif response == 'year':
+        student_year = input(
+            "Enter the year you want to generate reports for: 7/8/9/10 ").strip()
+        generate_single_year_report(student_year, csv_files)
 
-    # Generate PDFs for each student in the year
-    generate_year_reports(year)
+    elif response == 'all':
+        for csv_file in csv_files.values():
+            year = csv_to_object(csv_file)
+            generate_year_reports(year)
 
 
 if __name__ == '__main__':
