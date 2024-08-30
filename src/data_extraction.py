@@ -49,8 +49,13 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
             f"Error: File <{csv_file}> not found. Please ensure the file exists and try again.")
 
     # Initialise a new Year object
-    year = csv_file[-5:-4]
-    period = csv_file[-10:-6]
+    # Remove the first 5 chars and last 4 chars
+    csv_file = csv_file[14:-4]
+
+    # Period is first 4 chars
+    period = csv_file[:4]
+    year = csv_file[5:]
+
     year = Year(year, period)
     print(f"New Year object {year.get_year()} - {year.get_period()} created.")
 

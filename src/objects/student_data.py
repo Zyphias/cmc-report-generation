@@ -28,6 +28,10 @@ class StudentData:
             return [5 - ord(feedback[i]) + ord('A') for i in range(start, len(feedback), step) if isinstance(feedback[i], str)]
 
         def average_to_grade(scores):
+            # If no scores, return 'N/A'
+            if not scores:
+                return 'N/A'
+
             # Calculate average and convert back to letter grade
             return chr(5 - round(sum(scores) / len(scores)) + ord('A'))
 

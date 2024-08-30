@@ -40,7 +40,7 @@ def generate_comment(stu_name: str, averages: list[str], feedback: list[str]) ->
                 Please refer to assignments as tasks and efforts as effort.
                 Do not use semicolons, instead use commas in their place.
                 Instead of 'making effort' use 'demostrating effort'.
-                Ensure problem solving is 2 words not one.
+                Instead of 'problemsolving', use 'problem solving'.
                 Please don't mention the student's first name in every dot point. The first is enough.
                 Before submitting, please ensure that the feedback is concise and professional and that it makes gramattical
                 and syntactical sense.
