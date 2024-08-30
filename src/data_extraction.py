@@ -130,8 +130,6 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
 
             # Create a new Class object and add it to the Year object
             year.add_class(tutor, students, topics, level)
-            print(f"{len(topics)} topics.")
-            print("Topics found: ")
             i = j
             print('\n')
 
