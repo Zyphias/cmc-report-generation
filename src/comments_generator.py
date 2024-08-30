@@ -14,37 +14,32 @@ def generate_comment(stu_name: str, averages: list[str], feedback: list[str]) ->
     completion = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": f"""You are a tutor's assistant.
-                Given each week's comments for the student and their averages,
-                generate three dot points.
+            {"role": "system", "content": f"""
+             
+             
+                You are responsible for generating the comments for {stu_name}'s report card.
+                Their averages in terms of understanding, fluency, and problem solving are {averages[0]}, {averages[1]}, and {averages[2]} respectively.
+                Each week's comments are as follows: {feedback}
+                
+                Given this information, please generate three dot points:
+                - one referencing the student's general understanding
+                - one referencing the student's work ethic
+                - one referencing the student's progress, or lack thereof.
 
-                - one with general understanding
-                - one with work ethic
-                - whether they are progressing or not. If they are not, be clear about it.
-
-                Ensure to make mention to the student's first name. It should not mention the student's last name and should not contain quantitative data.
-                Instead, it should focus on the qualitative aspects of the student's learning and aspect.
-                Do not talk about any specific topics.
-
-                It should sound like comments a teacher would write on a report card.
-                Please address it as third person and be professional.
-
-                Please omit any 'keep up the good work' or 'try harder' comments.
-
-                Here is some data to assist:
-                Weekly Feedback: {feedback}
-                Student Name: {stu_name}
-                Student Averages (Understanding, Fluency, Problem Solving): {averages}
-
-                The dot points need to be short and precise. They should all be around 20 words long.
-                Please refer to assignments as tasks and efforts as effort.
-                Do not use semicolons, instead use commas in their place.
-                Instead of 'making effort' use 'demostrating effort'.
-                Instead of 'problemsolving', use 'problem solving'.
-                Please don't mention the student's first name in every dot point. The first is enough.
-                Before submitting, please ensure that the feedback is concise and professional and that it makes gramattical
-                and syntactical sense.
-
+                The dot points should be around 20 words long and should be concise and professional.
+                
+                Here are some additional guidelines:
+                - It should be in third person
+                - Only use the student's first name
+                - Do not mention any specific topics
+                - Do not use semicolons
+                - Only the first dot point should mention the student's name, refer to the student by either 'she' or 'he' in the other dot points
+                - Do not use 'keep up the good work' or 'try harder' comments
+                - Speak on qualitative aspects of the student's learning and effort, not quantitative data
+                - Please refer to assignments as tasks and efforts as effort.
+                - Instead of 'making effort' use 'demostrating effort'.
+                - Instead of 'problemsolving', use 'problem solving'.
+                Before submitting, please ensure that the feedback is concise and professional and that it makes gramattical and syntactical sense.
             """},
         ]
     )
