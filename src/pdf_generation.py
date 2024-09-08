@@ -372,7 +372,11 @@ def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, days_awa
 
 def generate_pdf(year: str, tutor: str, level: str, topics: list[str], student: Student, period: str, days_away: list[int] = None):
     # Define the folder where you want to save the PDFs
-    folder_path = f"reports/{period}/Y{year}"
+
+    if year == '1' or year == '2' or year == '3':
+        folder_path = f"reports/{period}/S{year}"
+    else:
+        folder_path = f"reports/{period}/Y{year}"
 
     # Ensure the reports directory exists
     if not os.path.exists(folder_path):

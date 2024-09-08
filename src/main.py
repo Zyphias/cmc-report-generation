@@ -6,7 +6,12 @@ from pdf_generation import generate_pdf
 
 def generate_year_reports(year: Year):
     period = year.get_period()
-    grade = f"Y{year.get_year()}"
+
+    if year.get_year() == '1' or year.get_year() == '2' or year.get_year() == '3':
+        grade = f"Stage {year.get_year()}"
+    else:
+        grade = f"Y{year.get_year()}"
+
     for class_ in year.get_classes():
         tutor = class_.get_tutor()
         level = f"{grade} {class_.get_level()}"
@@ -50,6 +55,9 @@ def generate_single_year_report(student_year, csv_files):
 
 def main():
     csv_files = {
+        '1': 'src/csv_store/24t3s1.csv',
+        '2': 'src/csv_store/24t3s2.csv',
+        '3': 'src/csv_store/24t3s3.csv',
         '7': 'src/csv_store/24t3y7.csv',
         '8': 'src/csv_store/24t3y8.csv',
         '9': 'src/csv_store/24t3y9.csv',
@@ -61,12 +69,13 @@ def main():
 
     if response == 'student':
         student_name = input("Enter the student's name: ").strip()
-        student_year = input("Enter the student's year: 7/8/9/10 ").strip()
+        student_year = input(
+            "Enter the student's year: 1/2/3/7/8/9/10 ").strip()
         generate_student_report(student_name, student_year, csv_files)
 
     elif response == 'year':
         student_year = input(
-            "Enter the year you want to generate reports for: 7/8/9/10 ").strip()
+            "Enter the year you want to generate reports for: 1/2/3/7/8/9/10 ").strip()
         generate_single_year_report(student_year, csv_files)
 
     elif response == 'all':
