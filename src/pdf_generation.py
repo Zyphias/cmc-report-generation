@@ -403,7 +403,7 @@ def generate_pdf(year: str, tutor: str, level: str, topics: list[str], student: 
     height = draw_comments(c, width, height,
                            generate_comment(student.name, student.averages, student.get_data().comments))
     height = draw_graph(
-        c, width, height, student.get_data().get_no_hw_feedback(), topics, days_away, 6)
+        c, width, height, student.get_data().get_no_hw_feedback(), topics, days_away, 7)
 
     # Draw centered footer
     c.setFont(FONT, 8)

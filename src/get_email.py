@@ -12,4 +12,5 @@ def get_contact_email(student_name: str) -> str:
         if row["First Name"] == first_name and row["Last Name"] == last_name:
             return row["Parent Contact 1 Email"]
 
-    return "No email found"
+    # if no email found, warn user
+    return "WARNING: NO PARENT EMAIL"
