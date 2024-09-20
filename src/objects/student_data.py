@@ -39,16 +39,18 @@ class StudentData:
         understanding = extract_and_convert(self.feedback, 0, 4)
         fluency = extract_and_convert(self.feedback, 1, 4)
         problem_solving = extract_and_convert(self.feedback, 2, 4)
+        homework = extract_and_convert(self.feedback, 3, 4)
 
         # Calculate averages and convert to letter grades
         return [
             average_to_grade(understanding),
             average_to_grade(fluency),
-            average_to_grade(problem_solving)
+            average_to_grade(problem_solving),
+            average_to_grade(homework)
         ]
 
     def pretty_print(self):
-        print("Averages: \n <U, F, PS>")
+        print("Averages: \n <U, F, PS, HW>")
         print(self.get_averages())
         print()
 

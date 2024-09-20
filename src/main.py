@@ -36,8 +36,6 @@ def generate_student_report(student_name, student_year, csv_files):
                 level = f"Y{year.get_year()} {class_.get_level()}"
                 generate_pdf(year.get_year(), class_.get_tutor(), level, class_.get_topics(),
                              student, year.get_period(), student.get_days_away())
-                print(
-                    f"Student: {student_name}, Parent Email: {get_contact_email(student_name)}")
                 return
 
     print(f"Student {student_name} not found in year {student_year}.")

@@ -5,7 +5,6 @@ client = OpenAI()
 def generate_comment(stu_name: str, averages: list[str], feedback: list[str]) -> str:
     """
     Generate a 100 word comment for the student based on the feedback provided.
-    ! Three dot points only.
     - one with general understanding
     - one with work ethic
     - whether they are progressing or not
@@ -18,16 +17,18 @@ def generate_comment(stu_name: str, averages: list[str], feedback: list[str]) ->
              
                 You are the tutor for {stu_name} in a mathematics class.
                 You are responsible for generating the comments for {stu_name}'s term report card.
-                Their averages in terms of understanding, fluency, and problem solving are {averages[0]}, {averages[1]}, and {averages[2]} respectively.
+                Their averages in terms of understanding, fluency, problem solving and homework are: {averages[0]}, {averages[1]}, {averages[2]}, {averages[3]} respectively.
                 Each week's comments are as follows: {feedback}
                 
-                Given this information, please generate three dot points:
+                Given this information, please generate three paragraphs:
                 - one referencing the student's general understanding
-                - one referencing the student's work ethic and homework completion.
+                - one referencing the student's work ethic and general homework completion (don't mention specific instances).
                 - one referencing the student's progress, or lack thereof.
 
-                The dot points should be around 20 words long and should be concise and professional. Please use similar wording to those of the metrics.
-                The metrics are below. Ensure that the dot points are formatted consistently.
+                The paragraphs should be around 20 words long and should be concise and professional. Please use similar wording to those of the metrics.
+                Please ensure there are no contradictions between the paragraphs. e.g. if a student is making progress, do not mention a lack of progress.
+                
+                The metrics are below. 
 
                 Understanding Metric:
                 A - Demonstrates a thorough and comprehensive grasp of mathematical concepts."
@@ -62,7 +63,7 @@ def generate_comment(stu_name: str, averages: list[str], feedback: list[str]) ->
                 - Please refer to assignments as tasks and efforts as effort.
                 - Instead of 'making effort' use 'demostrating effort'.
                 - Ensure 'problem solving' is two words and not one.
-                - Li Qing is a 'he', Parsa is also a 'he', Tanish is a 'he'
+                - Li Qing is a 'he', Parsa is also a 'he', Tanish is a 'he', Anji is a he.
                 - Vienna is a 'she'
                 - Joy is a 'she'
                 - Do not mention school.
@@ -76,11 +77,7 @@ def generate_comment(stu_name: str, averages: list[str], feedback: list[str]) ->
         ]
     )
     feedback = completion.choices[0].message.content
-    # Remove the dashes
-    feedback = feedback.replace("-", "")
-    # Add new line after each full stop
-    feedback = feedback.replace(". ", ".\n")
-    # print(feedback)
+
     return feedback
 
     # return """Gemma demonstrates a solid understanding of key concepts, showing improvement after revising foundational topics.
