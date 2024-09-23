@@ -59,7 +59,8 @@ def main():
         '7': 'src/csv_store/24t3y7.csv',
         '8': 'src/csv_store/24t3y8.csv',
         '9': 'src/csv_store/24t3y9.csv',
-        '10': 'src/csv_store/24t3y10.csv'
+        '10': 'src/csv_store/24t3y10.csv',
+        '11': 'src/csv_store/24t3y11.csv'
     }
 
     response = input(
@@ -68,12 +69,12 @@ def main():
     if response == 'student':
         student_name = input("Enter the student's name: ").strip()
         student_year = input(
-            "Enter the student's year: 1/2/3/7/8/9/10 ").strip()
+            "Enter the student's year: 1/2/3/7/8/9/10/11 ").strip()
         generate_student_report(student_name, student_year, csv_files)
 
     elif response == 'year':
         student_year = input(
-            "Enter the year you want to generate reports for: 1/2/3/7/8/9/10 ").strip()
+            "Enter the year you want to generate reports for: 1/2/3/7/8/9/10/11 ").strip()
         generate_single_year_report(student_year, csv_files)
 
     elif response == 'all':
