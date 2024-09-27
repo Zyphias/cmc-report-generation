@@ -1,6 +1,4 @@
 import os
-import random
-import string
 from turtle import color
 from PIL import Image
 from comments_generator import generate_comment
@@ -8,10 +6,9 @@ from objects.student import Student
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import A4
-from reportlab.lib.colors import black, white
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.colors import black, white, HexColor
+from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph
-from reportlab.lib.colors import HexColor
 from PyPDF2 import PdfReader, PdfWriter
 
 
@@ -24,16 +21,6 @@ TITLE_FONT_SIZE = 13
 UNDERSTANDING_COLOUR = '#69bf4b'
 FLUENCY_COLOUR = '#003965'
 PS_COLOUR = '#01665e'
-
-
-def generate_random_words(num_words: int) -> str:
-    words = []
-    for _ in range(num_words):
-        # Random word length between 3 and 10
-        word_length = random.randint(3, 10)
-        word = ''.join(random.choices(string.ascii_lowercase, k=word_length))
-        words.append(word)
-    return ' '.join(words)
 
 
 def draw_letterhead(c: canvas.Canvas, page_width: float, page_height: float):
@@ -372,11 +359,7 @@ def draw_graph(c: canvas.Canvas, page_width, page_height, data, topics, days_awa
 
 def generate_pdf(year: str, tutor: str, level: str, topics: list[str], student: Student, period: str, days_away: list[int] = None):
     # Define the folder where you want to save the PDFs
-
-    if year == '1' or year == '2' or year == '3':
-        folder_path = f"reports/{period}/S{year}"
-    else:
-        folder_path = f"reports/{period}/Y{year}"
+    folder_path = f"reports/{period}/{year}"
 
     # Ensure the reports directory exists
     if not os.path.exists(folder_path):

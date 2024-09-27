@@ -33,7 +33,7 @@ def generate_student_report(student_name, student_year, csv_files):
     for class_ in year.get_classes():
         for student in class_.get_students():
             if student.get_name() == student_name:
-                level = f"Y{year.get_year()} {class_.get_level()}"
+                level = f"{year.get_year()} {class_.get_level()}"
                 generate_pdf(year.get_year(), class_.get_tutor(), level, class_.get_topics(),
                              student, year.get_period(), student.get_days_away())
                 return

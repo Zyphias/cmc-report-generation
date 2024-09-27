@@ -48,14 +48,18 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
         sys.exit(
             f"Error: File <{csv_file}> not found. Please ensure the file exists and try again.")
 
-    # Initialise a new Year object
-    # Remove the first 5 chars and last 4 chars
-    csv_file = csv_file[14:-4]
-
-    # Period is first 4 chars
+    # Get the period and year from the CSV file name, removing the path and extension.
+    # Period is first 4 chars, year is last char
+    csv_file = csv_file[-10:-4]
     period = csv_file[:4]
-    year = csv_file[5:]
 
+    # If year is 1, 2 or 3, it is a stage, otherwise it is a year
+    if csv_file[5:] == '1' or csv_file[5:] == '2' or csv_file[5:] == '3':
+        year = f"S{csv_file[5:]}"
+    else:
+        year = f"Y{csv_file[5:]}"
+
+    # Initialise a new Year object
     year = Year(year, period)
     print(f"New Year object {year.get_year()} - {year.get_period()} created.")
 
@@ -65,7 +69,7 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
         if row.iloc[1] == 'Topic':
             total_classes += 1
 
-    print(f"Found {total_classes} classes.")
+    print(f"{total_classes} classes in {year.get_year()}.")
     print()
 
     # Break the CSV file into classes
@@ -131,9 +135,8 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
             # Create a new Class object and add it to the Year object
             year.add_class(tutor, students, topics, level)
             i = j
-            print('\n')
+            print()
 
-    print(
-        f"Created {total_classes} classes.")
+    print(f"Created {total_classes} classes.")
 
     return year

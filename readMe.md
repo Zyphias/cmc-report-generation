@@ -9,3 +9,16 @@ Can be split into 2 parts:
 
 1. Data extraction
 2. Data visualization
+
+### Reflections after first implementation
+
+Pros:
+
+1. The program is able to acheive the desired goal.
+
+Cons:
+
+1. The interface is not clear
+2. Repeated code
+3. Hard coded components
+4. Unclear error messages
