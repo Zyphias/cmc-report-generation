@@ -2,6 +2,11 @@ from data_extraction import csv_to_object
 from get_email import get_contact_email
 from objects.year import Year
 from pdf_generation import generate_pdf
+import smtplib
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 
 def generate_year_reports(year: Year):
@@ -83,5 +88,46 @@ def main():
             generate_year_reports(year)
 
 
+def send_email(receiver_email="steveyeung4@gmail.com", file_path="reports/24t3/Y9/kaylie_wong_24t3.pdf", student_name="Kaylie Wong"):
+    # Email details
+    sender_email = "steveyeung4@gmail.com"
+    sender_password = "nxqg rklq eoho pmku"
+    filename = file_path.split("/")[-1]
+
+    # Create the email with 'mixed' subtype to allow attachments
+    message = MIMEMultipart("mixed")
+    message["From"] = sender_email
+    message["To"] = receiver_email
+    message["Subject"] = "Term Report"
+
+    # Add the body of the email
+    body = f"Please find attached the term report for {student_name}."
+    body_part = MIMEText(body, "plain")
+    message.attach(body_part)
+
+    # Attach the file
+    with open(file_path, "rb") as attachment:
+        part = MIMEBase("application", "octet-stream")
+        part.set_payload(attachment.read())
+
+    encoders.encode_base64(part)
+    part.add_header(
+        "Content-Disposition",
+        f"attachment; filename={filename}",
+    )
+
+    message.attach(part)
+
+    # Send the email
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        server.starttls()
+        server.login(sender_email, sender_password)
+        server.send_message(message)
+
+    print("Email sent successfully")
+    exit()
+
+
 if __name__ == '__main__':
+    send_email()
     main()
