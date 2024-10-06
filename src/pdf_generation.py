@@ -43,6 +43,12 @@ def draw_letterhead(c: canvas.Canvas, page_width: float, page_height: float):
     c.drawImage(LETTER_HEAD_PATH, x=x, y=y, width=desired_width,
                 height=desired_height, mask='auto')
 
+    # Draw rectangle to cover the logo.
+    # ! IMPORTANT: This is to cover the black border of the logo
+    c.setFillColor(white)
+    c.setStrokeColor(white)
+    c.rect(0, desired_height-150, page_width, 10, fill=1)
+
     # Return the new 'page height' after the logo has been drawn
     return desired_height - 160
 
@@ -114,6 +120,8 @@ def draw_summary_line(c, page_width, page_height, pairs, max_width=MAX_WIDTH):
 
 def draw_summary(c: canvas.Canvas, page_width: float, page_height: float, stu_name: str, stu_avg: list[str], stu_mark: str, stu_level: str) -> float:
     c.setFont(TITLE_FONT, TITLE_FONT_SIZE)
+    c.setStrokeColor(black)
+    c.setFillColor(black)
     c.drawString(100, page_height, "Summary of Results")
     c.setFont(FONT, TEXT_SIZE)
 

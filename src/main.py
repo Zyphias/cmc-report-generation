@@ -129,5 +129,5 @@ def send_email(receiver_email="steveyeung4@gmail.com", file_path="reports/24t3/Y
 
 
 if __name__ == '__main__':
-    send_email()
     main()
+    # send_email()
