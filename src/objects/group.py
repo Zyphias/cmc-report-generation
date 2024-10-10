@@ -37,3 +37,10 @@ class Class:
     def generate_pdfs(self):
         for student in self.students:
             generate_pdf(self.tutor, self.level, self.topics, student)
+
+    def pretty_print(self):
+        print(f"Tutor: {self.tutor}")
+        print(f"Level: {self.level}")
+        print("Students: ")
+        for student in self.students:
+            print(f"- {student.get_name()}")

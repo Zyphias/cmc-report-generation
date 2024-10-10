@@ -16,7 +16,7 @@ def set_class_level(level: str) -> str | None:
     elif level == ('standard'):
         return PathType.STANDARD
     else:
-        return None
+        return ''
 
 
 def parse_student_data(data: str) -> StudentData:
@@ -82,7 +82,6 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
 
             # Find the students in the class
             j = i + 1
-            print("Class found: ")
             while j < len(df) and df.iloc[j, 1] != 'Topic':
                 student = df.iloc[j, 1]
                 # If student is NaN or not <first name> <last name>, skip
@@ -93,19 +92,12 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
                 # Set tutor and level if not already set
                 if tutor == '':
                     tutor = df.iloc[j, 0]
-                    print(f"Tutor: {tutor}.")
-                    level = set_class_level(df.iloc[j+1, 0])
-                    print(f"Level: {level}.")
-                    if level == None:
-                        level = ''
-                    print("Students: ")
-
-                # Create and append student to the list
-                student_name = student.strip()
-                print(f"- {student_name}.")
+                    level = set_class_level(
+                        df.iloc[j+1, 0].lower()) if isinstance(df.iloc[j+1, 0], str) else ''
 
                 # Grab all data from that row
                 student_data = df.iloc[j, 2:].to_list()
+
                 # Pop the last element (the mark), turn into whole number and
                 mark = str(student_data.pop())
                 if mark != 'nan':
@@ -113,8 +105,9 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
                     mark = mark.split('.')[0]
                 else:
                     mark = 'N/A'
+
                 student = Student(
-                    student_name, mark, parse_student_data(student_data))
+                    student.strip(), mark, parse_student_data(student_data))
 
                 students.append(student)
                 j += 1
@@ -128,14 +121,17 @@ def csv_to_object(csv_file: str = './csv_store/24t3y9.csv') -> Year:
             # Remove last 'topic' as it is exam column
             topics.pop()
 
-            # Replace non strings with empty string ''
-            topics = [topic if isinstance(
+            # Replace non strings with empty string '', stripping white space
+            topics = [topic.strip() if isinstance(
                 topic, str) else '' for topic in topics]
 
             # Create a new Class object and add it to the Year object
             year.add_class(tutor, students, topics, level)
             i = j
-            print()
+
+    for class_ in year.get_classes():
+        class_.pretty_print()
+        print()
 
     print(f"Created {total_classes} classes.")
 
